@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>ResponsiveVR demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<!-- Basics for VR -->
+		<script src="lib/ThreeJS/three.js"></script>
+		<script src="lib/ThreeJS/effects/VREffect.js"></script>
+		
+		<!-- jQuery is cool -->
+		<script src="lib/jquery.js" ></script>
+		
+		<!-- Obj file loaders -->
+		<script src="lib/ThreeJS/loaders/DDSLoader.js"></script>
+		<script src="lib/ThreeJS/loaders/MTLLoader.js"></script>
+		<script src="lib/ThreeJS/loaders/OBJMTLLoader.js"></script>
+		
+		<!-- HTML rasterizer for HTML to Canvas draw -->
+		<!-- From: http://cburgmer.github.io/rasterizeHTML.js/ -->
+		<script src="lib/resterizeHTML.js"></script>
+		
+		<!-- Show FPS -->
+		<script src="lib/stats.js"></script>
+		
+		<!-- Generic helper functions -->
+		<script src="lib/helpers.js"></script>
+		
+		<!-- Text-to-speech support -->
+		<!-- From: http://responsivevoice.org -->
+		<!--<script src="http://code.responsivevoice.org/responsivevoice.js"></script>-->
+		
+		<!-- Main Responsive VR scripts -->
+		<script src="lib/ResponsiveVR/VRDocumentParser.js"></script>
+		<script src="lib/ResponsiveVR/VRSceneModel.js"></script>
+		<script src="lib/ResponsiveVR/VRUserInput.js"></script>
+		<script src="lib/ResponsiveVR/VRGraphicsEngine.js"></script>
+		<script src="lib/ResponsiveVR/RemoteConnection.js"></script>
+		<script src="lib/ResponsiveVR/SessionControl.js"></script>
+		<script src="lib/ResponsiveVR/ResponsiveVR.js"></script>
+		
+	</head>
+	<body>
+		<header>
+			<nav>
+				<ul>
+					<li><a href="index.html">Home</a></li>
+					<li><a href="index.html">Page 2</a></li>
+					<li><a href="index.html">Page 3</a></li>
+					<li><a href="index.html">Page 4</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section>
+			<article imageSphere="media/park.jpg">
+				<header>
+					<h2>Savanna</h2>
+					<img style="width: 180px" src="media/elephant2.jpg" />
+				</header>
+				
+				<p imageSphere="media/elephant.jpg"><img style="width: 180px" src="media/elephant2.jpg" />A savanna or savannah is a grassland ecosystem characterised by the trees being sufficiently widely spaced so that the canopy does not close. The open canopy allows sufficient light to reach the ground to support an unbroken herbaceous layer consisting primarily of grasses. </p>
+				
+				<p><img style="width: 180px" src="media/Australian_savanna.jpg" />Savannas /maintain an open canopy despite a high tree density. It is often believed that savannas feature widely spaced, scattered trees. However, in many savannas, tree densities are higher and trees are more regularly spaced than in forest. The South American savanna types cerrado sensu stricto and cerrado dense typically have densities of trees similar to or higher than that found in South American tropical forests, with savanna ranging 800–3300 trees/ha and adjacent forests with 800–2000 trees/ha. Similarly Guinean savanna has 129 trees/ha, compared to 103 for riparian forest, while Eastern Australian sclerophyll forests have average tree densities of approximately 100 per hectare, comparable to savannas in the same region.</p>
+				
+				<p>Savannas are also characterised by seasonal water availability, with the majority of rainfall confined to one season; they are associated with several types of biomes, and are frequently in a transitional zone between forest and desert or grassland. Savanna covers approximately 20% of the Earth's land area.</p>
+			</article>
+			
+			<article>
+				<header>
+					<h2>Park</h2>
+					<img style="width: 180px" src="media/park_thumb.jpg" />
+				</header>
+				<p imageSphere="media/park.jpg">Content</p>
+			</article>
+			
+			<article>
+				<header>
+					<h2>Space</h2>
+					<img style="width: 180px" src="media/orbiter2.jpg" />
+				</header>
+				<p imageSphere="media/orbit.jpg">Content</p>
+			</article>
+			
+			<article>
+				<header>
+					<h2>Polar Sea</h2>
+					<img style="width: 180px" src="media/polarsea.jpg" />
+				</header>
+				<p videoSphere="media/360.m4v|media/360.ogv" videoWidthInPixels="480|960" videoHeightInPixels="240|480">Enjoy</p>
+			</article>
+			
+		</section>
+		
+		<footer>
+			Footer text
+		</footer>		
+		
+		<script>
+			window.onload=function(){
+				ResponsiveVR.init(window);
+			};
+		</script>
+	</body>
+</html>	
