@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ï»¿<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<title>ResponsiveVR demo</title>
@@ -39,10 +39,77 @@
 		<script src="lib/ResponsiveVR/RemoteConnection.js"></script>
 		<script src="lib/ResponsiveVR/SessionControl.js"></script>
 		<script src="lib/ResponsiveVR/ResponsiveVR.js"></script>
-		
+		<style>
+			body {
+				width: 800px;
+				margin-left: auto;
+				margin-right: auto;
+				margin-bottom: 80px;
+			}
+			/* 
+			* Header 
+			*/
+			body>header h1 {
+				background-color: black;
+				color: white;
+				
+			}
+			body>header {
+				text-align: center;
+				width: 100%;
+			}
+			header nav ul li {
+				float: left;
+				padding: 10px;
+				margin-left: 10px;
+				margin-right: 10px;
+				background-color: grey;
+				border-radius: 10px;
+			}
+			header nav ul li a {
+				text-decoration: none;
+				color: white;
+			}
+			header nav ul {
+				list-style-type: none;
+			}
+			/*
+			* Section
+			*/
+			body>section {
+				float: left;
+			}
+			body>section article header {
+				float: left;
+				background-color: grey;
+				padding: 10px;
+				border-radius: 10px;
+				margin: 10px;
+			}
+			body>section article {
+				float: left;
+				width: 100%;
+			}
+			body>section article p img{
+				float: left;
+				padding-right: 5px;
+				padding-bottom: 5px;
+			}
+			/*
+			* Footer
+			*/
+			body>footer {
+				float: left;
+				text-align: center;
+				width: 100%;
+				background-color: black;
+				color: white;
+			}
+		</style>
 	</head>
 	<body>
 		<header>
+			<h1>Responsive VR</h1>
 			<nav>
 				<ul>
 					<li><a href="index.html">Home</a></li>
@@ -51,6 +118,7 @@
 					<li><a href="index4.html">Page 4</a></li>
 				</ul>
 			</nav>
+			<div style="clear: both"></div>
 		</header>
 		<section>
 			<article imageSphere="media/elephant.jpg">
@@ -59,9 +127,9 @@
 					<img style="width: 180px" src="media/elephant2.jpg" />
 				</header>
 				
-				<p imageSphere="media/elephant.jpg"><img style="width: 180px" src="media/elephant2.jpg" />A savanna or savannah is a grassland ecosystem characterised by the trees being sufficiently widely spaced so that the canopy does not close. The open canopy allows sufficient light to reach the ground to support an unbroken herbaceous layer consisting primarily of grasses. </p>
+				<p imageSphere="media/elephant.jpg"><img style="width: 180px;" src="media/elephant2.jpg" />A savanna or savannah is a grassland ecosystem characterised by the trees being sufficiently widely spaced so that the canopy does not close. The open canopy allows sufficient light to reach the ground to support an unbroken herbaceous layer consisting primarily of grasses. </p>
 				
-				<p><img style="width: 180px" src="media/Australian_savanna.jpg" />Savannas /maintain an open canopy despite a high tree density. It is often believed that savannas feature widely spaced, scattered trees. However, in many savannas, tree densities are higher and trees are more regularly spaced than in forest. The South American savanna types cerrado sensu stricto and cerrado dense typically have densities of trees similar to or higher than that found in South American tropical forests, with savanna ranging 800–3300 trees/ha and adjacent forests with 800–2000 trees/ha. Similarly Guinean savanna has 129 trees/ha, compared to 103 for riparian forest, while Eastern Australian sclerophyll forests have average tree densities of approximately 100 per hectare, comparable to savannas in the same region.</p>
+				<p><img style="width: 180px" src="media/Australian_savanna.jpg" />Savannas /maintain an open canopy despite a high tree density. It is often believed that savannas feature widely spaced, scattered trees. However, in many savannas, tree densities are higher and trees are more regularly spaced than in forest. The South American savanna types cerrado sensu stricto and cerrado dense typically have densities of trees similar to or higher than that found in South American tropical forests, with savanna ranging 800â€“3300 trees/ha and adjacent forests with 800â€“2000 trees/ha. Similarly Guinean savanna has 129 trees/ha, compared to 103 for riparian forest, while Eastern Australian sclerophyll forests have average tree densities of approximately 100 per hectare, comparable to savannas in the same region.</p>
 				
 				<p>Savannas are also characterised by seasonal water availability, with the majority of rainfall confined to one season; they are associated with several types of biomes, and are frequently in a transitional zone between forest and desert or grassland. Savanna covers approximately 20% of the Earth's land area.</p>
 			</article>
@@ -93,9 +161,9 @@
 		</section>
 		
 		<footer>
-			Footer text
+			Copyright Heikki Heiskanen 2015
 		</footer>		
-		
+		<div style="clear: both"></div>
 		<script>
 			window.onload=function(){
 				ResponsiveVR.init(window);
