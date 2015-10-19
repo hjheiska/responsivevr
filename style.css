@@ -1,0 +1,77 @@
+body {
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 80px;
+}
+/* 
+* Header 
+*/
+body>header h1 {
+	background-color: black;
+	color: white;
+	
+}
+body>header {
+	text-align: center;
+	width: 100%;
+	margin-bottom: 20px;
+}
+header nav ul li {
+	float: left;
+	padding: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+	background-color: grey;
+	border-radius: 10px;
+}
+header nav ul li a {
+	text-decoration: none;
+	color: white;
+}
+header nav ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	
+	float: left;
+    position: relative;
+    left: -50%;
+}
+header nav {
+	float: left;
+	position: relative;
+	left: 50%;
+}
+/*
+* Section
+*/
+body>section {
+	float: left;
+}
+body>section article header {
+	float: left;
+	background-color: grey;
+	padding: 10px;
+	border-radius: 10px;
+	margin: 10px;
+}
+body>section article {
+	float: left;
+	width: 100%;
+}
+body>section article p img{
+	float: left;
+	padding-right: 5px;
+	padding-bottom: 5px;
+}
+/*
+* Footer
+*/
+body>footer {
+	float: left;
+	text-align: center;
+	width: 100%;
+	background-color: black;
+	color: white;
+}
