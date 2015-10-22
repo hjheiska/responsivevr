@@ -10,5 +10,6 @@ Currently this project includes code from the following outside libraries:
 - HTML rasterizer by rasterizeHTML.js (http://cburgmer.github.io/rasterizeHTML.js)
 - JQuery: https://jquery.com/
 - THREE.js: http://threejs.org/
+- JSARToolkit: https://github.com/kig/JSARToolKit
 
 This project is very much still a work in progress, so not much to see here yet.
