@@ -11,7 +11,7 @@ var sceneStatus =
 	},
 	r: 
 	{
-		c : { x : 0, y : 0, z : 0 }, // Clieant head rotation (Euler)
+		c : { x : 0, y : 0, z : 0 }, // Client head rotation (Euler)
 		s : { x : 0, y : 0, z : 0 }
 	}
 };
