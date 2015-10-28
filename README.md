@@ -11,5 +11,7 @@ Currently this project includes code from the following outside libraries:
 - JQuery: https://jquery.com/
 - THREE.js: http://threejs.org/
 - JSARToolkit: https://github.com/kig/JSARToolKit
+- Kinect2 Node.js API: https://github.com/wouterverweirder/kinect2
+- Node.js WebSocket server: https://github.com/websockets/ws
 
 This project is very much still a work in progress, so not much to see here yet.

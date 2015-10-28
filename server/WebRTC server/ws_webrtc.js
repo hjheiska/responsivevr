@@ -32,33 +32,20 @@ wss.on('open', function() {
 				
 // Handle incoming connections
 wss.on('connection', function connection(ws_client) {
-	if(wss.clients.length > 2) { 
-		console.log("Too many connections open");
-		ws_client.close();
-	}
 	
-	ws_client.clientType = "client"; // Client until otherwise indicated
 	console.log("New connection");
 	
 	ws_client.on('message', function incoming(data) {
-		console.log(data);
 		var dataObject = JSON.parse(data);
-		if(typeof dataObject.password !== 'undefined') {
-			if(dataObject.password == "salasana") {
-				ws_client.clientType  = "server";
-				console.log("Server browser identified succesfully");
-			}
-		}
-		else {
-			// Send message to clients that are not the same type
-			wss.clients.forEach(function each(client) {
-				if(client.clientType !=  ws_client.clientType) client.send(data);
-			});	
-		}
+		// Broadcast message
+		wss.clients.forEach(function each(client) {
+			if(ws_client != client) client.send(data);
+		});	
+		
 	});
 	
 	ws_client.on('close', function incoming(data) {
-		console.log("Client with type " + ws_client.clientType + " disconnected");
+		console.log("Client disconnected");
 	});
 	
 });
