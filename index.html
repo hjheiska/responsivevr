@@ -40,13 +40,62 @@
 		<script src="lib/ResponsiveVR/VRUserInput.js"></script>
 		<script src="lib/ResponsiveVR/VRSceneBuilder.js"></script>
 		<script src="lib/ResponsiveVR/VRGraphicsEngine.js"></script>
-		<script src="lib/ResponsiveVR/RemoteConnection.js"></script>
 		<script src="lib/ResponsiveVR/SessionControl.js"></script>
+		<script src="lib/ResponsiveVR/RemoteConnection.js"></script>
 		<script src="lib/ResponsiveVR/ResponsiveVR.js"></script>
 		
 		<link type="text/css" rel="stylesheet" href="style.css" />
 	</head>
 	<body>
+		<div class="login">
+			<form id="login">
+				<div> Username:<input type="text" name="username"> </div>
+				<div> Passowrd: <input type="text" name="password"> </div>
+				<input type="submit" value="Login">
+				<input type="button" id="logout" value="Logout">
+				<input type="button" id="connect_client" value="Connect as client">
+				<input type="button" id="connect_server" value="Connect as server">
+				<input type="button" id="disconnect" value="Disconnect">
+			</form>
+			<div class="loggedInIndicator"></div>
+			<div class="connectionIndicator"></div>
+			<script>
+				jQuery("#login").submit(function( event ) {
+					event.preventDefault();
+					var username = jQuery(this).find("[name='username']").val();
+					var password = jQuery(this).find("[name='password']").val();
+					SessionControl.addToken(username, password);
+				});
+				jQuery("#logout").click(function( event ) {
+					SessionControl.removeToken();
+				});
+				jQuery("#connect_client").click(function( event ) {
+					RemoteConnection.startConnection(false);
+				});
+				jQuery("#connect_server").click(function( event ) {
+					RemoteConnection.startConnection(true);
+				});
+				jQuery("#disconnect").click(function( event ) {
+					RemoteConnection.disconnect();
+				});
+				
+				
+				setInterval(function(){ 
+					if(SessionControl.isAdmin()) 
+						jQuery(".loggedInIndicator").html("Logged in");
+					else 
+						jQuery(".loggedInIndicator").html("");
+					
+					if(RemoteConnection.connectionIsOpen()) 
+						jQuery(".connectionIndicator").html("Connected");
+					else
+						jQuery(".connectionIndicator").html("");
+						
+				}, 1000);
+				
+			</script>
+			
+		</div>
 		<header>
 			<h1>Responsive VR</h1>
 			<nav>
