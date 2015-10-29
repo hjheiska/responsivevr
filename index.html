@@ -4,6 +4,8 @@
 		<title>ResponsiveVR demo</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		
 		<!-- JSARToolkit -->
 		<script src="lib/JSARToolkit/NyAs3Utils.js"></script><script src="lib/JSARToolkit/FLARArrayUtil.js"></script><script src="lib/JSARToolkit/FLARException.js"></script><script src="lib/JSARToolkit/FLARMat.js"></script><script src="lib/JSARToolkit/FLARRgbPixelReader.js"></script><script src="lib/JSARToolkit/NyARHistogramAnalyzer.js"></script><script src="lib/JSARToolkit/NyARPca2d.js"></script><script src="lib/JSARToolkit/NyARRasterReader.js"></script><script src="lib/JSARToolkit/NyARTypes.js"></script><script src="lib/JSARToolkit/FLARRasterFilter.js"></script><script src="lib/JSARToolkit/FLARTypes.js"></script><script src="lib/JSARToolkit/NyARLabel.js"></script><script src="lib/JSARToolkit/FLARLabeling.js"></script><script src="lib/JSARToolkit/NyARParam.js"></script><script src="lib/JSARToolkit/FLARParam.js"></script><script src="lib/JSARToolkit/NyARRaster.js"></script><script src="lib/JSARToolkit/FLARRaster.js"></script><script src="lib/JSARToolkit/NyARCode.js"></script><script src="lib/JSARToolkit/FLARCode.js"></script><script src="lib/JSARToolkit/NyARMatch.js"></script><script src="lib/JSARToolkit/NyARRasterAnalyzer.js"></script><script src="lib/JSARToolkit/FLARRasterAnalyzer.js"></script><script src="lib/JSARToolkit/NyARRasterFilter.js"></script><script src="lib/JSARToolkit/NyARSquareDetect.js"></script><script src="lib/JSARToolkit/FLARSquareDetect.js"></script><script src="lib/JSARToolkit/NyARTransMat.js"></script><script src="lib/JSARToolkit/FLARTransMat.js"></script><script src="lib/JSARToolkit/NyARUtils.js"></script><script src="lib/JSARToolkit/NyARIdMarker.js"></script><script src="lib/JSARToolkit/NyARPickup.js"></script><script src="lib/JSARToolkit/FLARProcessor.js"></script><script src="lib/JSARToolkit/NyARDetector.js"></script><script src="lib/JSARToolkit/FLARDetector.js"></script><script src="lib/JSARToolkit/FLARIdMarkerDetector.js"></script><script src="lib/JSARToolkit/NyARSingleMarkerProcesser.js"></script><script src="lib/JSARToolkit/NyUtils.js"></script>
 		
@@ -44,6 +46,9 @@
 		<script src="lib/ResponsiveVR/RemoteConnection.js"></script>
 		<script src="lib/ResponsiveVR/ResponsiveVR.js"></script>
 		
+		<!-- 2d UI -->
+		<script src="interface.js"></script>
+		
 		<link type="text/css" rel="stylesheet" href="style.css" />
 	</head>
 	<body>
@@ -69,87 +74,9 @@
 				<br/>
 				<strong>Status:</strong>
 				<div class="loggedInIndicator"></div><div class="connectionIndicator"></div>
-				<script>
-					jQuery("#login").submit(function( event ) {
-						event.preventDefault();
-						var username = jQuery(this).find("[name='username']").val();
-						var password = jQuery(this).find("[name='password']").val();
-						SessionControl.addToken(username, password);
-					});
-					jQuery("#logoutButton").click(function( event ) {
-						SessionControl.removeToken();
-					});
-					jQuery("#connect_client").click(function( event ) {
-						RemoteConnection.startConnection(false);
-					});
-					jQuery("#connect_server").click(function( event ) {
-						RemoteConnection.startConnection(true);
-					});
-					jQuery("#disconnect").click(function( event ) {
-						RemoteConnection.disconnect();
-					});
-					
-					setInterval(function(){ 
-						if(SessionControl.isAdmin()) {
-							jQuery(".loggedInIndicator").html("<span style='color: green'>Logged in</span>");
-							jQuery("#loginButton").attr("disabled", true);
-							}
-						else  {
-							jQuery(".loggedInIndicator").html("<span style='color: red'>Not logged in</span>");
-							jQuery("#loginButton").attr("disabled", false);
-						}
-						
-						if(RemoteConnection.connectionIsOpen()) {
-							jQuery(".connectionIndicator").html("<span style='color: green'>Connected</span>");
-							jQuery(".connectButton").attr("disabled", true);
-							jQuery("#disconnect").attr("disabled", false);
-						}
-						else {
-							jQuery(".connectionIndicator").html("<span style='color: red'>Not connected</span>");
-							jQuery(".connectButton").attr("disabled", false);
-							jQuery("#disconnect").attr("disabled", true);
-						}
-							
-					}, 1000);
-					
-				</script>
-				
 			</div>
 		</div>	
 		<div class="loginLink"><a id="syncPopup" href="#">&#128274;</a></div>
-		<script>
-			
-			jQuery("#syncPopup").click(function() {
-				showLoginPopup(true);
-			});
-			jQuery(".closeWindow").click(function() {
-				showLoginPopup(false);
-			});
-			
-			var showLoginPopup = function(show) {
-				var fadeInSpeed = 333;
-				var fadeOutSpeed = 333;
-				
-				if(show) {
-					jQuery(".backgroundFade").css("opacity","0");
-					jQuery(".backgroundFade").css("display","block");
-					jQuery(".backgroundFade").animate({"opacity":"0.75"}, fadeInSpeed);
-					
-					jQuery(".login_container").css("opacity","0");
-					jQuery(".login_container").css("display","block");
-					jQuery(".login_container").animate({"opacity":"1"}, fadeInSpeed);	
-				}
-				else {
-					jQuery(".backgroundFade").animate({"opacity":"0"}, fadeOutSpeed, function() {
-						jQuery(".backgroundFade").css("display","none");	
-					});
-					
-					jQuery(".login_container").animate({"opacity":"0"}, fadeOutSpeed, function() {
-						jQuery(".login_container").css("display","none");
-					});	
-				}
-			}			
-		</script>
 		<header>
 			<h1>Responsive VR</h1>
 			<nav>
