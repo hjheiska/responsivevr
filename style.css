@@ -1,21 +1,30 @@
 body {
-	width: 800px;
 	margin-left: auto;
 	margin-right: auto;
-	margin-bottom: 80px;
+	margin-top: 0px;
 }
 /* 
 * Header 
 */
 body>header h1 {
-	background-color: black;
 	color: white;
-	
+	margin: 0px;
+}
+.header {
+	height: 100px;
+	background-color: black;
+}
+.nav {
+	padding-bottom: 10px;
+	padding-top: 10px;
 }
 body>header {
 	text-align: center;
 	width: 100%;
 	margin-bottom: 20px;
+	
+	
+	margin-top: 0px;
 }
 header nav ul li {
 	float: left;
@@ -47,7 +56,9 @@ header nav {
 * Section
 */
 body>section {
-	float: left;
+	width: 800px;
+	margin-left: auto;
+	margin-right: auto;
 }
 body>section article header {
 	float: left;
@@ -80,11 +91,12 @@ body>section article p {
 * Footer
 */
 body>footer {
-	float: left;
+	clear: both;
 	text-align: center;
 	width: 100%;
 	background-color: black;
 	color: white;
+	height: 100px;
 }
 
 /* Login popup */
@@ -120,7 +132,7 @@ body>footer {
 	
 }
 .loginLink {
-	position: absolute;
+	position: fixed;
 	right: 10px;
 	top: 50px;
 	font-size: 19px;
@@ -145,4 +157,16 @@ body>footer {
 	right: -10px;
 	top: -10px;
 	cursor: pointer;
+}
+#statusWindow {
+	position: fixed;
+	left: 10px;
+	top: 10px;
+	z-index: 1;
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 15px;
+	padding: 10px;
+	height: 75px;
+	width: 100px;
 }

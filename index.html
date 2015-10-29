@@ -53,11 +53,15 @@
 	</head>
 	<body>
 		<div class="backgroundFade"></div>
+		<div id="statusWindow">
+			<strong>Status:</strong>
+			<div class="loggedInIndicator"></div><div class="connectionIndicator"></div>
+		</div>		
 		<div class="login_container">
 			<div class="login">
 				<div class="closeWindow">X</div>
 				<form id="login">
-					<div> Username:<input type="text" name="username" value="heikki"> </div>
+					<div> Username: <input type="text" name="username" value="heikki"> </div>
 					<div> Password: <input type="password" name="password" value="salasana"> </div>
 					<div>
 						<input type="submit" id="loginButton" value="Login">
@@ -70,21 +74,23 @@
 					<div>
 						<input type="button" id="disconnect" value="Disconnect">
 					</div>
-				</form>
-				<br/>
-				<strong>Status:</strong>
-				<div class="loggedInIndicator"></div><div class="connectionIndicator"></div>
+				</form>		
 			</div>
 		</div>	
 		<div class="loginLink"><a id="syncPopup" href="#">&#128274;</a></div>
 		<header>
-			<h1>Responsive VR</h1>
-			<nav>
-				<ul>
-					<li><a href="index.html">Home</a></li>
-					<li><a href="subpage.html">Page 2</a></li>
-				</ul>
-			</nav>
+			<div class="header">
+				<span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+				<h1 style="display: inline-block; vertical-align: middle;">Responsive VR</h1>
+			</div>
+			<div class="nav">
+				<nav>
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						<li><a href="subpage.html">Page 2</a></li>
+					</ul>
+				</nav>
+			</div>
 			<div style="clear: both"></div>
 		</header>
 		<section>
@@ -130,8 +136,9 @@
 			
 		</section>
 		
-		<footer>
-			Copyright Heikki Heiskanen 2015
+		<footer style="vertical-align: center">
+			<span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+			<span style="display: inline-block; vertical-align: middle;">heikki.j.heiskanen@aalto.fi / 044 123 456 76</span>
 		</footer>		
 		<div style="clear: both"></div>
 		<script>
