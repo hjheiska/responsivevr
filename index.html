@@ -47,55 +47,109 @@
 		<link type="text/css" rel="stylesheet" href="style.css" />
 	</head>
 	<body>
-		<div class="login">
-			<form id="login">
-				<div> Username:<input type="text" name="username"> </div>
-				<div> Passowrd: <input type="text" name="password"> </div>
-				<input type="submit" value="Login">
-				<input type="button" id="logout" value="Logout">
-				<input type="button" id="connect_client" value="Connect as client">
-				<input type="button" id="connect_server" value="Connect as server">
-				<input type="button" id="disconnect" value="Disconnect">
-			</form>
-			<div class="loggedInIndicator"></div>
-			<div class="connectionIndicator"></div>
-			<script>
-				jQuery("#login").submit(function( event ) {
-					event.preventDefault();
-					var username = jQuery(this).find("[name='username']").val();
-					var password = jQuery(this).find("[name='password']").val();
-					SessionControl.addToken(username, password);
-				});
-				jQuery("#logout").click(function( event ) {
-					SessionControl.removeToken();
-				});
-				jQuery("#connect_client").click(function( event ) {
-					RemoteConnection.startConnection(false);
-				});
-				jQuery("#connect_server").click(function( event ) {
-					RemoteConnection.startConnection(true);
-				});
-				jQuery("#disconnect").click(function( event ) {
-					RemoteConnection.disconnect();
-				});
-				
-				
-				setInterval(function(){ 
-					if(SessionControl.isAdmin()) 
-						jQuery(".loggedInIndicator").html("Logged in");
-					else 
-						jQuery(".loggedInIndicator").html("");
+		<div class="backgroundFade"></div>
+		<div class="login_container">
+			<div class="login">
+				<div class="closeWindow">X</div>
+				<form id="login">
+					<div> Username:<input type="text" name="username" value="heikki"> </div>
+					<div> Password: <input type="password" name="password" value="salasana"> </div>
+					<div>
+						<input type="submit" id="loginButton" value="Login">
+						<input type="button" id="logoutButton" value="Logout">
+					</div>
+					<div>
+						<input type="button" id="connect_server" class="connectButton" value="Connect as server">
+						<input type="button" id="connect_client" class="connectButton" value="Connect as client">
+					</div>
+					<div>
+						<input type="button" id="disconnect" value="Disconnect">
+					</div>
+				</form>
+				<br/>
+				<strong>Status:</strong>
+				<div class="loggedInIndicator"></div><div class="connectionIndicator"></div>
+				<script>
+					jQuery("#login").submit(function( event ) {
+						event.preventDefault();
+						var username = jQuery(this).find("[name='username']").val();
+						var password = jQuery(this).find("[name='password']").val();
+						SessionControl.addToken(username, password);
+					});
+					jQuery("#logoutButton").click(function( event ) {
+						SessionControl.removeToken();
+					});
+					jQuery("#connect_client").click(function( event ) {
+						RemoteConnection.startConnection(false);
+					});
+					jQuery("#connect_server").click(function( event ) {
+						RemoteConnection.startConnection(true);
+					});
+					jQuery("#disconnect").click(function( event ) {
+						RemoteConnection.disconnect();
+					});
 					
-					if(RemoteConnection.connectionIsOpen()) 
-						jQuery(".connectionIndicator").html("Connected");
-					else
-						jQuery(".connectionIndicator").html("");
+					setInterval(function(){ 
+						if(SessionControl.isAdmin()) {
+							jQuery(".loggedInIndicator").html("<span style='color: green'>Logged in</span>");
+							jQuery("#loginButton").attr("disabled", true);
+							}
+						else  {
+							jQuery(".loggedInIndicator").html("<span style='color: red'>Not logged in</span>");
+							jQuery("#loginButton").attr("disabled", false);
+						}
 						
-				}, 1000);
+						if(RemoteConnection.connectionIsOpen()) {
+							jQuery(".connectionIndicator").html("<span style='color: green'>Connected</span>");
+							jQuery(".connectButton").attr("disabled", true);
+							jQuery("#disconnect").attr("disabled", false);
+						}
+						else {
+							jQuery(".connectionIndicator").html("<span style='color: red'>Not connected</span>");
+							jQuery(".connectButton").attr("disabled", false);
+							jQuery("#disconnect").attr("disabled", true);
+						}
+							
+					}, 1000);
+					
+				</script>
 				
-			</script>
+			</div>
+		</div>	
+		<div class="loginLink"><a id="syncPopup" href="#">&#128274;</a></div>
+		<script>
 			
-		</div>
+			jQuery("#syncPopup").click(function() {
+				showLoginPopup(true);
+			});
+			jQuery(".closeWindow").click(function() {
+				showLoginPopup(false);
+			});
+			
+			var showLoginPopup = function(show) {
+				var fadeInSpeed = 333;
+				var fadeOutSpeed = 333;
+				
+				if(show) {
+					jQuery(".backgroundFade").css("opacity","0");
+					jQuery(".backgroundFade").css("display","block");
+					jQuery(".backgroundFade").animate({"opacity":"0.75"}, fadeInSpeed);
+					
+					jQuery(".login_container").css("opacity","0");
+					jQuery(".login_container").css("display","block");
+					jQuery(".login_container").animate({"opacity":"1"}, fadeInSpeed);	
+				}
+				else {
+					jQuery(".backgroundFade").animate({"opacity":"0"}, fadeOutSpeed, function() {
+						jQuery(".backgroundFade").css("display","none");	
+					});
+					
+					jQuery(".login_container").animate({"opacity":"0"}, fadeOutSpeed, function() {
+						jQuery(".login_container").css("display","none");
+					});	
+				}
+			}			
+		</script>
 		<header>
 			<h1>Responsive VR</h1>
 			<nav>
