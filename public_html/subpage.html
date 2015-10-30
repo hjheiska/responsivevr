@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>ResponsiveVR demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+		
+		<!-- JSARToolkit -->
+		<script src="js/JSARToolkit/NyAs3Utils.js"></script><script src="js/JSARToolkit/FLARArrayUtil.js"></script><script src="js/JSARToolkit/FLARException.js"></script><script src="js/JSARToolkit/FLARMat.js"></script><script src="js/JSARToolkit/FLARRgbPixelReader.js"></script><script src="js/JSARToolkit/NyARHistogramAnalyzer.js"></script><script src="js/JSARToolkit/NyARPca2d.js"></script><script src="js/JSARToolkit/NyARRasterReader.js"></script><script src="js/JSARToolkit/NyARTypes.js"></script><script src="js/JSARToolkit/FLARRasterFilter.js"></script><script src="js/JSARToolkit/FLARTypes.js"></script><script src="js/JSARToolkit/NyARLabel.js"></script><script src="js/JSARToolkit/FLARLabeling.js"></script><script src="js/JSARToolkit/NyARParam.js"></script><script src="js/JSARToolkit/FLARParam.js"></script><script src="js/JSARToolkit/NyARRaster.js"></script><script src="js/JSARToolkit/FLARRaster.js"></script><script src="js/JSARToolkit/NyARCode.js"></script><script src="js/JSARToolkit/FLARCode.js"></script><script src="js/JSARToolkit/NyARMatch.js"></script><script src="js/JSARToolkit/NyARRasterAnalyzer.js"></script><script src="js/JSARToolkit/FLARRasterAnalyzer.js"></script><script src="js/JSARToolkit/NyARRasterFilter.js"></script><script src="js/JSARToolkit/NyARSquareDetect.js"></script><script src="js/JSARToolkit/FLARSquareDetect.js"></script><script src="js/JSARToolkit/NyARTransMat.js"></script><script src="js/JSARToolkit/FLARTransMat.js"></script><script src="js/JSARToolkit/NyARUtils.js"></script><script src="js/JSARToolkit/NyARIdMarker.js"></script><script src="js/JSARToolkit/NyARPickup.js"></script><script src="js/JSARToolkit/FLARProcessor.js"></script><script src="js/JSARToolkit/NyARDetector.js"></script><script src="js/JSARToolkit/FLARDetector.js"></script><script src="js/JSARToolkit/FLARIdMarkerDetector.js"></script><script src="js/JSARToolkit/NyARSingleMarkerProcesser.js"></script><script src="js/JSARToolkit/NyUtils.js"></script>
+		
+		<!-- Basics for VR -->
+		<script src="js/ThreeJS/three.js"></script>
+		<script src="js/ThreeJS/effects/VREffect.js"></script>
+		<script src="js/ThreeJS/VRControls.js"></script>
+		<script src="js/ThreeJS/OrbitControls_custom.js"></script>
+		<!-- jQuery is cool -->
+		<script src="js/jquery.js" ></script>
+		
+		<!-- Obj file loaders -->
+		<script src="js/ThreeJS/loaders/DDSLoader.js"></script>
+		<script src="js/ThreeJS/loaders/MTLLoader.js"></script>
+		<script src="js/ThreeJS/loaders/OBJMTLLoader.js"></script>
+		
+		<!-- HTML rasterizer for HTML to Canvas draw -->
+		<!-- From: http://cburgmer.github.io/rasterizeHTML.js/ -->
+		<script src="js/resterizeHTML.js"></script>
+		
+		<!-- Show FPS -->
+		<script src="js/stats.js"></script>
+		
+		<!-- Generic helper functions -->
+		<script src="js/helpers.js"></script>
+		
+		<!-- Text-to-speech support -->
+		<!-- From: http://responsivevoice.org -->
+		<!--<script src="http://code.responsivevoice.org/responsivevoice.js"></script>-->
+		
+		<!-- Main Responsive VR scripts -->
+		<script src="js/ResponsiveVR/VRDocumentParser.js"></script>
+		<script src="js/ResponsiveVR/VRSceneModel.js"></script>
+		<script src="js/ResponsiveVR/VRUserInput.js"></script>
+		<script src="js/ResponsiveVR/VRSceneBuilder.js"></script>
+		<script src="js/ResponsiveVR/VRGraphicsEngine.js"></script>
+		<script src="js/ResponsiveVR/SessionControl.js"></script>
+		<script src="js/ResponsiveVR/RemoteConnection.js"></script>
+		<script src="js/ResponsiveVR/ResponsiveVR.js"></script>
+		
+		<!-- 2d UI -->
+		<script src="js/interface.js"></script>
+		
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<div class="backgroundFade"></div>
+		<div id="statusWindow">
+			<strong>Status:</strong>
+			<span class="connectionIndicator"><span style="color: red">Not connected</span></span>
+		</div>		
+		
+		<div class="loginLink"><a id="syncPopup" href="#">&#128274;</a>
+			<div class="login_container">
+				<div class="login">
+					<div class="closeWindow"><p>X</p></div>
+					<div class="form_container">
+						<h3 class="formTitle">Join a session</h3>
+						<p>
+							Please give the ID of the session you wish to join.
+						</p>
+						<form id="joinSession">
+							<input type="text" name="session_id" placeholder="Session ID">
+							<input type="submit" id="connectButton" value="Join">
+						</form>
+					</div>	
+					<div>Or...</div>
+					<div class="form_container">
+						<h3 class="formTitle">Create a session</h3>
+						<p>
+							Please enter the administrator password in order to create a new session.
+						</p>
+						<form id="createSession">
+							<input type="text" name="session_id" placeholder="Session ID">
+							<input type="password" name="password" placeholder="Password">
+							<input type="submit" id="createSessionButton" value="Create">
+						</form>
+					</div>
+				</div>
+			</div>	
+		</div>
+		<header>
+			<div class="header">
+				<span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+				<h1 style="display: inline-block; vertical-align: middle;">Responsive VR</h1>
+			</div>
+			<div class="nav">
+				<nav>
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						<li><a href="subpage.html">Page 2</a></li>
+					</ul>
+				</nav>
+			</div>
+			<div style="clear: both"></div>
+		</header>
+		<section>
+			<article imageSphere="media/elephant.jpg">
+				<header>
+					<h2>Savanna</h2>
+					<img style="width: 180px" src="media/elephant2.jpg" />
+				</header>
+				
+				<p imageSphere="media/elephant.jpg"><img style="width: 180px;" src="media/elephant2.jpg" />A savanna or savannah is a grassland ecosystem characterised by the trees being sufficiently widely spaced so that the canopy does not close. The open canopy allows sufficient light to reach the ground to support an unbroken herbaceous layer consisting primarily of grasses. The word originally entered English in 1555[10] as the Latin Zauana, equivalent in the orthography of the times to zavana (see history of V). Peter Martyr reported it as the local name for the plain around Comagre, the court of the cacique Carlos in present-day Panama. The accounts are inexact, but this is usually placed in present-day Madugandí or at points on the nearby Guna Yala coast opposite Ustupo or on Point Mosquitos. These areas are now either given over to modern cropland or jungle.</p>
+				
+				<p><img style="width: 180px" src="media/Australian_savanna.jpg" />Savannas /maintain an open canopy despite a high tree density. It is often believed that savannas feature widely spaced, scattered trees. However, in many savannas, tree densities are higher and trees are more regularly spaced than in forest. The South American savanna types cerrado sensu stricto and cerrado dense typically have densities of trees similar to or higher than that found in South American tropical forests, with savanna ranging 800–3300 trees/ha and adjacent forests with 800–2000 trees/ha. Similarly Guinean savanna has 129 trees/ha, compared to 103 for riparian forest, while Eastern Australian sclerophyll forests have average tree densities of approximately 100 per hectare, comparable to savannas in the same region.</p>
+				
+				<p>Savannas are also characterised by seasonal water availability, with the majority of rainfall confined to one season; they are associated with several types of biomes, and are frequently in a transitional zone between forest and desert or grassland. Savanna covers approximately 20% of the Earth's land area.</p>
+			</article>
+			
+		</section>
+		
+		<footer style="vertical-align: center">
+			<span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+			<span style="display: inline-block; vertical-align: middle;">heikki.j.heiskanen@aalto.fi / 044 123 456 76</span>
+		</footer>		
+		<div style="clear: both"></div>
+		<script>
+			window.onload=function(){
+				ResponsiveVR.init(window);
+			};
+		</script>
+		<div id="debug"></div>
+	</body>
+</html>	

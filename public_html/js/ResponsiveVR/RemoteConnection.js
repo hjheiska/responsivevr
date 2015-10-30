@@ -25,14 +25,19 @@ RemoteConnection = {};
 	var connecting = false;
 	var disconnect = false;
 	var logInAsAdmin = false;
-	
+	var adminPassword = "";
+	var session_id = "";
 	RemoteConnection.connectionIsOpen = function() {
 		return (webRTCData.connection != null)
 	}
 	
-	RemoteConnection.startConnection = function(adminLogin) {
+	RemoteConnection.startConnection = function(id, password) {
 		disconnect = false;
-		logInAsAdmin = adminLogin;
+		if(password != null) {
+			adminPassword = password;
+			logInAsAdmin = true;
+		}
+		session_id = id;
 		syncLoop();
 	}
 	
@@ -54,7 +59,7 @@ RemoteConnection = {};
 			webRTCData.connecting = true;
 			setTimeout(function(){ 
 				console.log("Establishing WebRTC channel");
-				WebRTC_Channel.establishChannel("wss://54.93.164.209:8080",  webRTCData, logInAsAdmin);
+				WebRTC_Channel.establishChannel("wss://54.93.164.209" + "?sessionid=" + session_id + "&password=" + adminPassword,  webRTCData, logInAsAdmin);
 			}, 1000); 	
 		}
 		else {
@@ -93,15 +98,13 @@ WebRTC_Channel = {};
 	var remoteWebcamStream = null;
 		
 	WebRTC_Channel.establishChannel = function(serverUri, dataObject, logInAsAdmin) {
-		var signalingChannel = new WebSocket("wss://54.93.164.209:8080");
+		var signalingChannel = new WebSocket(serverUri);
 		
 		signalingChannel.onopen = function(evt) {  
 			
 			dataObject.connection = signalingChannel;
 			dataObject.connecting = false;
 			console.log("WebRTC signalling connection opened");
-			// If is the server, send access token to identify
-			if(logInAsAdmin) signalingChannel.send(JSON.stringify({ 'token' : SessionControl.getToken() }));
 			
 			navigator.getUserMedia({ video: true }, 
 			function(stream) {
@@ -118,7 +121,6 @@ WebRTC_Channel = {};
 			});
 		};
 		
-	
 		signalingChannel.onerror = function(error) {
 			console.log("Could not open WebRTC signalling connection:" + error);
 			dataObject.connecting =  false;
@@ -206,6 +208,7 @@ WebRTC_Channel = {};
 		*	- Incase an cadidate information arrives, add it to candidates
 		*/
 		signalingChannel.onmessage = function (evt) {
+			console.log("Message received: " + evt.data);
 			var message = JSON.parse(evt.data);
 			
 			if(message.sdp || message.candidate) {
@@ -268,7 +271,7 @@ WebRTC_Channel = {};
 	var createDataChannel = function(dataChannelName, rtcPeerConnection, dataObject) {
 		var dataChannel = rtcPeerConnection.createDataChannel(dataChannelName);
 		dataChannel.onerror = function (error) { console.log("Data Channel Error:", error);};
-		dataChannel.onmessage = function (event) { dataObject.data = event.data; dataObject.newMessage = true; };
+		dataChannel.onmessage = function (event) { dataObject.data = event.data; dataObject.newMessage = true; console.log("Receiving " + event.data.length + " characters of data over WebRTC"); };
 		dataChannel.onopen = function () {  console.log("Channel open"); };
 		dataChannel.onclose = function () { console.log("The Data Channel is Closed");	};
 		return dataChannel;
@@ -277,28 +280,3 @@ WebRTC_Channel = {};
 	
 }(WebRTC_Channel));	
 	
-	
-Kinect2Bridge = {}; 
-(function (Kinect2Bridge) {
-	
-	Kinect2Bridge.establishBridge = function(serverUri, dataObject) {
-		serverSyncConnection = new WebSocket(serverUri);
-		dataObject = { };
-		
-		serverSyncConnection.onopen = function(evt) {  
-				console.log("Kinect2 connection opened");
-		};
-		
-		serverSyncConnection.onclose = function(evt) {  
-				connectionObject = null;
-		};
-		
-		
-		
-		serverSyncConnection.onmessage = function(evt) {  
-			var newDataInJSON = evt.data;
-			var newData = JSON.parse(newDataInJSON);
-			dataObject.data = newData;
-		};
-	}
-}(Kinect2Bridge));	

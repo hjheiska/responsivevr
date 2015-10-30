@@ -101,24 +101,28 @@ body>footer {
 
 /* Login popup */
 .login_container {
-	display: none;
-	position: fixed;
-	left: 50%;
-	top: 40%;
-	width: 300px;
+  display: none;
+  left: 3px;
+  position: absolute;
+  top: 13px;
+  width: 300px;
+  z-index: 2;
 }
 .login_container .login {
 	position: relative;
-	left: -50%;
 	background-color: black;
-	text-align: center;
-	padding: 10px;
+	padding: 20px;
 	border-radius: 10px;
 	color: white;
-	
+	right: 287px;
+	border: 1px solid grey;
 }
 .login_container .login div {
 	padding: 5px;
+}
+
+.login_container .form_container  p{
+	font-size: 15px;
 }
 .backgroundFade {
 	display: none;
@@ -129,6 +133,7 @@ body>footer {
 	position: fixed;
 	opacity: 0.75;
 	background-color: black;
+	z-index: 1;
 	
 }
 .loginLink {
@@ -149,24 +154,44 @@ body>footer {
 	left: 5px;
 }
 .closeWindow {
-	position: absolute;
-	background-color: black;
-	width: 20px;
-	height: 20px;
-	border-radius: 10px;
-	right: -10px;
-	top: -10px;
-	cursor: pointer;
+  background-color: black;
+  border: 1px solid grey;
+  border-radius: 15px;
+  cursor: pointer;
+  height: 20px;
+  position: absolute;
+  right: -16px;
+  top: -16px;
+  width: 20px;
+}
+.closeWindow p {
+  left: 3px;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: -2px;
 }
 #statusWindow {
-	position: fixed;
-	left: 10px;
-	top: 10px;
-	z-index: 1;
-	background-color: white;
-	border: 1px solid black;
-	border-radius: 15px;
-	padding: 10px;
-	height: 75px;
-	width: 100px;
+  background-color: grey;
+  border: 1px solid black;
+  border-radius: 15px;
+  color: white;
+  font-size: 12px;
+  padding: 7px;
+  position: fixed;
+  right: 47px;
+  top: 10px;
+  z-index: 1;
+}
+
+.login_container .formTitle {
+	font-weight: bold;
+}
+.login_container .fieldlabel {
+	display: block;
+	color: grey;
+	font-size: 0.75em;
+}
+.form_container {
+	margin-bottom: 20px;
 }
