@@ -52,9 +52,9 @@ function VRSceneModel() {
 				articleSelected : null,
 				contentSelected: null,
 				backSelected : null
-			}
+			},
+			hudVisible : false
 		},
-		hudVisible : false,
 		inputDevices : 
 		{
 			local : {

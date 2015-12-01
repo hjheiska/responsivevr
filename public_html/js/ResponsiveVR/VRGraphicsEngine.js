@@ -676,7 +676,8 @@ VRGraphicsEngine = {};
 				sceneModel.state.navigation.selections.contentSelected = Object3D.vr.index;
 			break;
 			case "toggleHud":
-				sceneModel.state.hudVisible = !sceneModel.state.hudVisible;
+				sceneModel.state.navigation.hudVisible = !sceneModel.state.navigation.hudVisible;
+				sceneModel.state.newStateToSend = true;
 				checkVisibility();
 			break;
 			case "toggleWebcam":
@@ -700,7 +701,7 @@ VRGraphicsEngine = {};
 		var toggleWebcamSphere = threeJsScene.getObjectByName( "toggleWebcamSphere").getObjectByName("mesh");
 		
 		// Everything except hud toggle button if hud disabled
-		if(!sceneModel.state.hudVisible)  {
+		if(!sceneModel.state.navigation.hudVisible)  {
 			for(var i = 0; i < links.length; i++) hideShowObjectAndContents(links[i], false, false, -1, -1);	
 			for(var i = 0; i < articles.length; i++) hideShowObjectAndContents(articles[i], false, false, -1, -1);	
 			footer.visible = false;
