@@ -36,6 +36,7 @@ RemoteConnection = {};
 		if(password != null) {
 			adminPassword = password;
 			logInAsAdmin = true;
+			state.moveToAdminView = true;
 		}
 		session_id = id;
 		syncLoop();

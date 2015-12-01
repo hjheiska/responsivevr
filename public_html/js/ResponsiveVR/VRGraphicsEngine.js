@@ -39,10 +39,13 @@ VRGraphicsEngine = {};
 	contentPlaneHolder = null;
 	avatar2 = null;
 	
+	rayOrigin = new THREE.Vector2(0, 0);
+	cameraPosition = new THREE.Vector3();
+		
 	avatar = {
 		scale : { x : 0.09, y: 0.09, z : 0.09 },
 		rotation : { x : 0, y : -Math.PI , z : 0 },
-		position : { x : 0.70, y : -0.70, z : -0.5 },
+		position : { x : 0.5, y : -0.75, z : -0.5 },
 		model: null,
 		bones: [
 			{
@@ -207,7 +210,7 @@ VRGraphicsEngine = {};
 		
 		avatar.model =  new THREE.Object3D();
 		avatar.model.scale.set(avatar.scale.x, avatar.scale.y, avatar.scale.z);
-		avatar.model.rotation.set(avatar.rotation.x, avatar.rotation.y, avatar.rotation.z);
+		avatar.model.rotation.set(avatar.rotation.x, avatar.rotation.y, avatar.rotation.z, 'XYZ');
 		avatar.model.position.set(avatar.position.x, avatar.position.y, avatar.position.z);
 		VRSceneBuilder.loadAndAddObject("objmtl", "media/models/minecraft/minecraft2.obj|media/models/minecraft/minecraft2.mtl", avatar.model);
 		newScene.add(avatar.model);
@@ -431,10 +434,11 @@ VRGraphicsEngine = {};
 	var animate = function() {
 		
 		if(sceneModel.state.moveToAdminView) {
-			// cameraOffset.position.copy(avatar.model.position);
-			// cameraOffset.position.setY(0);
-			// cameraOffset.rotation.copy(avatar.model.rotation);
 			sceneModel.state.moveToAdminView = false;
+			cameraOffset.position.copy(avatar.model.position);
+			cameraOffset.position.setY(0);
+			cameraOffset.rotation.copy(avatar.model.rotation);
+			
 			avatar.model.position.set(0,avatar.model.position.y,0);
 			avatar.model.rotation.set(0,avatar.model.rotation.y - Math.PI / 2,0,'XYZ');
 			
@@ -588,12 +592,15 @@ VRGraphicsEngine = {};
 	
 	var handleSelection = function() {
 		
-		var rayOrigin = new THREE.Vector2(0, 0);
 		if(!VRIsSupported)  {
 			rayOrigin = new THREE.Vector2(mouseXPos, mouseYPos);
 		}
 		
-		raycaster.setFromCamera( rayOrigin, camera );	
+		cameraPosition.setFromMatrixPosition( camera.matrixWorld ); // world position
+		raycaster.ray.origin.copy( cameraPosition );
+		raycaster.ray.direction.set( rayOrigin.x, rayOrigin.y, 0.5 ).unproject( camera ).sub( cameraPosition ).normalize();
+		//raycaster.setFromCamera( rayOrigin, camera );	
+
 		var intersects = raycaster.intersectObjects( linkObjects, false ); 
 		
 		var d = new Date(); 
