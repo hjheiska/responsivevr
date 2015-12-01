@@ -50,7 +50,7 @@ ResponsiveVR = {};
 		VRDocumentParser.initScene(sceneModel, window.document); 
 		VRUserInput.connectTo(sceneModel, window.document);
 		VRGraphicsEngine.connectTo(sceneModel);
-		RemoteConnection.connectTo(sceneModel);
+		RemoteConnection.reConnectTo(sceneModel);
 
 	}
 	

@@ -51,6 +51,11 @@ RemoteConnection = {};
 		state = sceneModel.state;
 	}
 
+	RemoteConnection.reConnectTo = function(sceneModel) {
+		state = sceneModel.state;
+		if(logInAsAdmin) state.moveToAdminView = true;
+	}
+
 	
 	var syncLoop = function() {
 			
