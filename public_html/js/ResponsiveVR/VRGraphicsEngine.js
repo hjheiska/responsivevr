@@ -234,8 +234,8 @@ VRGraphicsEngine = {};
 		backSphere.add(backSphereMesh);
 		backSphere.position.set(-0.25,-1,-1);
 		backSphere.name="backSphere";
-		backSphere.vr = {};
-		backSphere.vr.type = "back";
+		backSphereMesh.vr = {};
+		backSphereMesh.vr.type = "back";
 		
 		var toggleHudSphere =  new THREE.Object3D();
 		toggleHudSphereMesh = new THREE.Mesh( navSphereGeom, greyMaterial );
@@ -243,8 +243,8 @@ VRGraphicsEngine = {};
 		toggleHudSphere.add(toggleHudSphereMesh);
 		toggleHudSphere.position.set(0,-1,-1);
 		toggleHudSphere.name = "toggleHudSphere";
-		toggleHudSphere.vr = {};
-		toggleHudSphere.vr.type = "toggleHud";
+		toggleHudSphereMesh.vr = {};
+		toggleHudSphereMesh.vr.type = "toggleHud";
 		
 		var toggleWebcamSphere =  new THREE.Object3D();
 		toggleWebcamSphereMesh = new THREE.Mesh( navSphereGeom, greyMaterial );
@@ -252,13 +252,13 @@ VRGraphicsEngine = {};
 		toggleWebcamSphere.add(toggleWebcamSphereMesh);
 		toggleWebcamSphere.position.set(0.25,-1,-1);
 		toggleWebcamSphere.name = "toggleWebcamSphere";
-		toggleWebcamSphere.vr = {};
-		toggleWebcamSphere.vr.type = "toggleWebcam";
+		toggleWebcamSphereMesh.vr = {};
+		toggleWebcamSphereMesh.vr.type = "toggleWebcam";
 		
 		newScene.add(backSphere, toggleHudSphere, toggleWebcamSphere);
-		VRGraphicsEngine.makeObjectALink(backSphere);
-		VRGraphicsEngine.makeObjectALink(toggleHudSphere);
-		VRGraphicsEngine.makeObjectALink(toggleWebcamSphere);
+		VRGraphicsEngine.makeObjectALink(backSphereMesh);
+		VRGraphicsEngine.makeObjectALink(toggleHudSphereMesh);
+		VRGraphicsEngine.makeObjectALink(toggleWebcamSphereMesh);
 		
 		// Add background sphere
 		var geometry = new THREE.SphereGeometry( 9000, 64, 32 );
@@ -696,8 +696,8 @@ VRGraphicsEngine = {};
 		var articles = threeJsScene.getObjectByName( "articles" ).children;
 		var footer = threeJsScene.getObjectByName( "footer" );
 		var header = threeJsScene.getObjectByName( "header" );
-		var backSphere = threeJsScene.getObjectByName( "backSphere" );
-		var toggleWebcamSphere = threeJsScene.getObjectByName( "toggleWebcamSphere");
+		var backSphere = threeJsScene.getObjectByName( "backSphere" ).getObjectByName("mesh");
+		var toggleWebcamSphere = threeJsScene.getObjectByName( "toggleWebcamSphere").getObjectByName("mesh");
 		
 		// Everything except hud toggle button if hud disabled
 		if(!sceneModel.state.hudVisible)  {
