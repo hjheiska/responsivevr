@@ -43,7 +43,7 @@ VRSceneBuilder = {};
 	TOTAL_HUD_WIDTH = HUD_RADIUS * Math.PI * 2;
 	hudAspectRatio = TOTAL_HUD_WIDTH / TOTAL_HUD_HEIGHT;
 	HUD_HEIGHT_IN_PIXELS = HUD_WIDTH_IN_PIXELS / hudAspectRatio;
-	CONTENT_PLANE_WIDTH = 1.5;
+	CONTENT_PLANE_WIDTH = 1.25;
 	CONTENT_PLANE_WIDTH_IN_PIXELS = parseInt((CONTENT_PLANE_WIDTH / TOTAL_HUD_WIDTH) * HUD_WIDTH_IN_PIXELS);
 	
 
@@ -62,7 +62,7 @@ VRSceneBuilder = {};
 			linkObject, 
 			linkVisualAngle, 
 			linkWidth, 
-			linkYOffset, 
+			linkYOffset + HUD_Y_OFFSET, 
 			elementIndex, 
 			numberOfElements
 		);
@@ -89,7 +89,7 @@ VRSceneBuilder = {};
 			articleObject, 
 			articleVisualAngle, 
 			articleWidth, 
-			articleYOffset, 
+			articleYOffset + HUD_Y_OFFSET, 
 			elementIndex, 
 			numberOfElements
 		);
@@ -110,7 +110,7 @@ VRSceneBuilder = {};
 				contentObject, 
 				contentVisualAngle, 
 				articleWidth, 
-				articleYOffset, 
+				0, 
 				i, 
 				element.contents.length
 			);
@@ -158,7 +158,7 @@ VRSceneBuilder = {};
 			footerObject, 
 			footerVisualAngle, 
 			footerWidth, 
-			footerYOffset, 
+			footerYOffset  + HUD_Y_OFFSET, 
 			0, 
 			1
 		);
@@ -184,7 +184,7 @@ VRSceneBuilder = {};
 			headerObject, 
 			headerVisualAngle, 
 			headerWidth, 
-			headerYOffset, 
+			headerYOffset + HUD_Y_OFFSET, 
 			0, 
 			1
 		);
@@ -264,8 +264,8 @@ VRSceneBuilder = {};
 			style += 'font-size: 20px;';
 		}
 		else {
-			style += 'font-size: 18px;';
-			style += 'text-align: justify;';
+			style += 'font-size: 14px;';
+			//style += 'text-align: justify;';
 			style += 'box-sizing: border-box;';
 		}
 		
@@ -327,9 +327,9 @@ VRSceneBuilder = {};
 		}
 		
 		contentPlane.vr.element.text = 
-			'<div style="-moz-column-count: 2; -webkit-column-count: 2; font-size: 18px;' + 
-			'padding: 10px; box-sizing: border-box; width: ' + CONTENT_PLANE_WIDTH_IN_PIXELS + 
-			'px">' + contentPlane.vr.element.text + '</div>';
+			'<div style="-moz-column-count: 2; -webkit-column-count: 2; font-size: 14px;' + 
+			'padding: 5px; box-sizing: border-box; width: ' + CONTENT_PLANE_WIDTH_IN_PIXELS + 
+			'px; text-align: left;">' + contentPlane.vr.element.text + '</div>';
 		
 		var dimensions = Utils.getMarkupRenderedSize(contentPlane.vr.element.text); 
 		var contentPlaneHeight = (dimensions.height / HUD_HEIGHT_IN_PIXELS) * TOTAL_HUD_HEIGHT;
@@ -356,7 +356,7 @@ VRSceneBuilder = {};
 	VRSceneBuilder.loadAndAddObject = function(type, src, scene) {
 		VRSceneBuilder.objectsBeingLoaded++;
 		src = src.toString();
-		var loader = new THREE.OBJMTLLoader();
+		
 		switch(type) {
 			case "objmtl":
 				var loader = new THREE.OBJMTLLoader();
@@ -366,6 +366,28 @@ VRSceneBuilder = {};
 					function ( object ) {
 						scene.add(object);
 						VRSceneBuilder.objectsBeingLoaded--;
+				});
+			break;
+			case "json":
+				var loader = new THREE.JSONLoader(); 
+				loader.load(src, function(geometry, materials) {
+					skinnedMesh = new THREE.SkinnedMesh(
+						geometry, 
+						 new THREE.MeshLambertMaterial(
+						{
+						  color: 0xCC0000
+						})
+					); 
+					// skinnedMesh = new THREE.SkinnedMesh(
+						// geometry, 
+						// new THREE.MeshFaceMaterial(materials)
+					// ); 
+					// var materials = skinnedMesh.material.materials; 
+					// for (var i = 0,length = materials.length; i < length; i++) { 
+						// var mat = materials[i]; mat.skinning = true; 
+					// } 
+					scene.add(skinnedMesh);
+					VRSceneBuilder.objectsBeingLoaded--;
 				});
 			break;
 		}

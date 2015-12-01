@@ -30,6 +30,7 @@ function VRSceneModel() {
 	
 	this.state = 
 	{
+		moveToAdminView: false,
 		logicUpdate : false,
 		newStateToSend : false,
 		newStateReceived : false,
@@ -53,7 +54,7 @@ function VRSceneModel() {
 				backSelected : null
 			}
 		},
-		hudVisible : true,
+		hudVisible : false,
 		inputDevices : 
 		{
 			local : {

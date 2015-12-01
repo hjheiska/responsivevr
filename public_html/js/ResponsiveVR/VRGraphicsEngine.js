@@ -1,7 +1,18 @@
 
 VRGraphicsEngine = {};
-(function (VRGraphicsEngine, THREE, screen) {
-	VRIsSupported = false; //navigator.mozGetVRDevices || navigator.getVRDevices;
+(function (VRGraphicsEngine, THREE, screen, window) {
+	
+	mouseXPos = 0;
+	mouseYPos = 0;
+	
+	window.addEventListener( 'mousemove', function(event) {
+		mouseXPos = ( event.clientX / window.innerWidth ) * 2 - 1;
+		mouseYPos = - ( event.clientY / window.innerHeight ) * 2 + 1;	
+	}, false );
+
+
+	
+	VRIsSupported = navigator.mozGetVRDevices || navigator.getVRDevices;
 	if(Utils.QueryString.debug) VRIsSupported = false;
 	
 	desktopRenderer = null;
@@ -15,6 +26,7 @@ VRGraphicsEngine = {};
 	contentPlane = null;
 	
 	camera = null;
+	cameraOffset = new THREE.Object3D();
 	controls = null;
 	raycaster = new THREE.Raycaster();
 	linkObjects = [];
@@ -23,9 +35,13 @@ VRGraphicsEngine = {};
 	cursorSphere = null;
 	backgroundSphere = null;
 	
+	articles = [];
+	contentPlaneHolder = null;
+	avatar2 = null;
+	
 	avatar = {
 		scale : { x : 0.09, y: 0.09, z : 0.09 },
-		rotation : { x : 0, y : -Math.PI / 1.5, z : 0 },
+		rotation : { x : 0, y : -Math.PI , z : 0 },
 		position : { x : 0.70, y : -0.70, z : -0.5 },
 		model: null,
 		bones: [
@@ -166,7 +182,7 @@ VRGraphicsEngine = {};
 		
 		var header = new THREE.Object3D(); header.name = "header";
 		var links =  new THREE.Object3D(); links.name = "links";
-		var articles =  new THREE.Object3D(); articles.name = "articles";
+		articles =  new THREE.Object3D(); articles.name = "articles";
 		var footer =  new THREE.Object3D(); footer.name = "footer";
 		newScene.add(header, links, articles, footer);
 		newScene.links = [];
@@ -196,6 +212,14 @@ VRGraphicsEngine = {};
 		VRSceneBuilder.loadAndAddObject("objmtl", "media/models/minecraft/minecraft2.obj|media/models/minecraft/minecraft2.mtl", avatar.model);
 		newScene.add(avatar.model);
 		
+		// avatar2 =  new THREE.Object3D();
+		// VRSceneBuilder.loadAndAddObject("json", "media/models/007/json/model2_json.json", avatar2);
+		// console.log(avatar2);
+		// newScene.add(avatar2);
+		// avatar2.rotation.set(avatar.rotation.x, avatar.rotation.y, avatar.rotation.z);
+		// avatar2.position.set(avatar.position.x, avatar.position.y, avatar.position.z);
+		// avatar2.scale.set(0.5, 0.5, 0.5);
+		
 		// Add cursor sphere object for menu selection
 		var cursorSphereGeom =  new THREE.SphereGeometry( 0.01, 10, 10 );
 		cursorSphere = new THREE.Mesh( cursorSphereGeom, cursorMaterial );
@@ -208,7 +232,7 @@ VRGraphicsEngine = {};
 		backSphereMesh = new THREE.Mesh( navSphereGeom, greyMaterial );
 		backSphereMesh.name="mesh";
 		backSphere.add(backSphereMesh);
-		backSphere.position.set(-0.25,-0.7,-1);
+		backSphere.position.set(-0.25,-1,-1);
 		backSphere.name="backSphere";
 		backSphere.vr = {};
 		backSphere.vr.type = "back";
@@ -217,7 +241,7 @@ VRGraphicsEngine = {};
 		toggleHudSphereMesh = new THREE.Mesh( navSphereGeom, greyMaterial );
 		toggleHudSphereMesh.name="mesh";
 		toggleHudSphere.add(toggleHudSphereMesh);
-		toggleHudSphere.position.set(0,-0.7,-1);
+		toggleHudSphere.position.set(0,-1,-1);
 		toggleHudSphere.name = "toggleHudSphere";
 		toggleHudSphere.vr = {};
 		toggleHudSphere.vr.type = "toggleHud";
@@ -226,7 +250,7 @@ VRGraphicsEngine = {};
 		toggleWebcamSphereMesh = new THREE.Mesh( navSphereGeom, greyMaterial );
 		toggleWebcamSphereMesh.name="mesh";
 		toggleWebcamSphere.add(toggleWebcamSphereMesh);
-		toggleWebcamSphere.position.set(0.25,-0.7,-1);
+		toggleWebcamSphere.position.set(0.25,-1,-1);
 		toggleWebcamSphere.name = "toggleWebcamSphere";
 		toggleWebcamSphere.vr = {};
 		toggleWebcamSphere.vr.type = "toggleWebcam";
@@ -250,7 +274,10 @@ VRGraphicsEngine = {};
 		contentPlane.name="contentPlane";
 		contentPlane.rotation.copy(new THREE.Euler(0, 0, 0, "XYZ"));
 		contentPlane.position.copy(new THREE.Vector3(0, 0, -HUD_RADIUS));
-		newScene.add(contentPlane);
+		
+		contentPlaneHolder =  new THREE.Object3D();
+		contentPlaneHolder.add(contentPlane);
+		newScene.add(contentPlaneHolder);
 		
 		// Webcamera plane
 		webcam.image.webcameraPlane = new THREE.Mesh(
@@ -277,7 +304,8 @@ VRGraphicsEngine = {};
 		webcamScene.add( new THREE.AmbientLight( 0xffffff ) );
 		webcamScene.add(webcam.image.webcamCamera);
 		newScene.add( new THREE.AmbientLight( 0xffffff ) );
-		newScene.add(camera);
+		cameraOffset.add(camera);
+		newScene.add(cameraOffset);
 		
 		if(threeJsScene == null) {
 			sceneModel = newModel;
@@ -298,6 +326,7 @@ VRGraphicsEngine = {};
 		sceneModel = newModel;
 		threeJsScene = newScene; 
 		checkVisibility();
+		
 	}
 
 	activateFullscreen = function() {
@@ -401,27 +430,50 @@ VRGraphicsEngine = {};
 	
 	var animate = function() {
 		
-		if(avatar.model.children.length > 0 && sceneModel.state.inputDevices.local.skeletons.length > 0) {
+		if(sceneModel.state.moveToAdminView) {
+			// cameraOffset.position.copy(avatar.model.position);
+			// cameraOffset.position.setY(0);
+			// cameraOffset.rotation.copy(avatar.model.rotation);
+			sceneModel.state.moveToAdminView = false;
+			avatar.model.position.set(0,avatar.model.position.y,0);
+			avatar.model.rotation.set(0,avatar.model.rotation.y - Math.PI / 2,0,'XYZ');
+			
+		}
 		
-			for(var i = 0; i < avatar.bones.length; i++) {
-				// Set bone if not set
-				if(avatar.bones[i].meshGroup == null) {
-					avatar.bones[i].meshGroup = avatar.model.getObjectByName(avatar.bones[i].meshName);
-					setBoneOffsets(avatar.bones[i]);
+		// Check if avatar model has loaded
+		if(avatar.model.children.length > 0) {
+			
+			// Kinect data
+			if(sceneModel.state.inputDevices.local.skeletons.length > 0) { 
+			
+				for(var i = 0; i < avatar.bones.length; i++) {
+					
+					// Set bone if not set
+					if(avatar.bones[i].meshGroup == null) {
+						avatar.bones[i].meshGroup = avatar.model.getObjectByName(avatar.bones[i].meshName);
+						setBoneOffsets(avatar.bones[i]);
+					}
+					
+					// Set bone rotation
+					var rotation = {x :0, y:0, z:0, w:1 };
+					
+					switch(avatar.bones[i].name) {
+						case "head":rotation =  sceneModel.state.inputDevices.local.HMDs[0];break;
+						case "leftArm":rotation = getJointRotation(10, 9, 0);break;
+						case "rightArm":rotation = getJointRotation(5, 6, 0);break;
+						case "leftLeg":rotation = getJointRotation(13, 12, 0);break;
+						case "rightLeg":rotation = getJointRotation(17, 16, 0);break;
+					}
+					
+					setJoinRotation(avatar.bones[i], rotation);
 				}
-				// Set bone rotation
-				var rotation = {x :0, y:0, z:0, w:1 };
-				
-				switch(avatar.bones[i].name) {
-					case "head":rotation =  sceneModel.state.inputDevices.local.HMDs[0];break;
-					case "leftArm":rotation = getJointRotation(10, 9, 0);break;
-					case "rightArm":rotation = getJointRotation(5, 6, 0);break;
-					case "leftLeg":rotation = getJointRotation(13, 12, 0);break;
-					case "rightLeg":rotation = getJointRotation(17, 16, 0);break;
-				}
-				
-				setJoinRotation(avatar.bones[i], rotation);
 			}
+			else { // Just head rotation
+				avatar.bones[0].meshGroup = avatar.model.getObjectByName(avatar.bones[0].meshName);
+				setBoneOffsets(avatar.bones[0]);
+				setJoinRotation(avatar.bones[0],  sceneModel.state.inputDevices.local.HMDs[0]);
+			}
+			
 		}
 		
 		if(sceneModel.state.inputDevices.local.webCameraImage && !webcam.image.webcameraPlane.material.map) {
@@ -464,6 +516,14 @@ VRGraphicsEngine = {};
 		desktopRenderer.render(webcamScene, webcam.image.webcamCamera, webcamRenderTarget, true );
 		renderer.render(threeJsScene, camera);
 		
+		// Add hover effect to middle content
+		var d = new Date();
+		var n = d.getTime(); 
+		articles.position.setY(Math.sin(n / 500) / 100);
+		contentPlaneHolder.position.setY(Math.sin(n / 500) / 100);
+		
+		articles.rotation.set(0, Math.sin((n - 500) / 500) / 150, 0, 'XYZ');
+	
 		if(sceneModel.state.logicUpdate || sceneModel.state.newStateReceived) {
 			checkVisibility();
 			sceneModel.state.logicUpdate = false;
@@ -527,7 +587,13 @@ VRGraphicsEngine = {};
 	}
 	
 	var handleSelection = function() {
-		raycaster.setFromCamera( new THREE.Vector2(0, 0), camera );	
+		
+		var rayOrigin = new THREE.Vector2(0, 0);
+		if(!VRIsSupported)  {
+			rayOrigin = new THREE.Vector2(mouseXPos, mouseYPos);
+		}
+		
+		raycaster.setFromCamera( rayOrigin, camera );	
 		var intersects = raycaster.intersectObjects( linkObjects, false ); 
 		
 		var d = new Date(); 
@@ -813,4 +879,4 @@ VRGraphicsEngine = {};
 	}
 
 	
-}(VRGraphicsEngine, THREE, screen));
+}(VRGraphicsEngine, THREE, screen, window));
