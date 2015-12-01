@@ -58,6 +58,7 @@ var processRequest = function(req, res) {
 	}
 	if(req.method == "GET") {
 		var uri = url.parse(req.url).pathname;
+		if(uri == "/") uri = "/index.html";
 		var filename = path.join(process.cwd() + "/../../public_html", uri);
 		
 		fs.exists(filename, function(exists) {
@@ -69,7 +70,7 @@ var processRequest = function(req, res) {
 			}
 			else {
 				var mimeType = mimeTypes[path.extname(filename).split(".")[1]];
-				res.writeHead(200, mimeType);
+				res.writeHead(200, "OK", {'Content-Type': mimeType + '; charset=utf-8'});
 				var fileStream = fs.createReadStream(filename);
 				fileStream.pipe(res);
 			}
