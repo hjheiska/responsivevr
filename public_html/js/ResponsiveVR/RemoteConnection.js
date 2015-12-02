@@ -11,7 +11,6 @@ navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || 
 
 RemoteConnection = {};
 (function (RemoteConnection, SessionControl) {
-
 	
 	var webRTCData = {
 		connection : null,
@@ -112,7 +111,7 @@ WebRTC_Channel = {};
 			dataObject.connecting = false;
 			console.log("WebRTC signalling connection opened");
 			
-			navigator.getUserMedia({ video: true }, 
+			navigator.getUserMedia({ audio: true }, 
 			function(stream) {
 				webcamStream = stream;
 				rtcChannel = getRtcChannel(logInAsAdmin, signalingChannel, dataObject);
@@ -175,13 +174,17 @@ WebRTC_Channel = {};
 		
 		rtcPeerConnection.onaddstream = function(event) {
 			remoteWebcamStream = event.stream;
+			// Warning: don't uncomment when doing local multiuser test
+			// var player = new Audio();
+			// player.autoplay = 'autoplay';
+			// player.srcObject = event.stream;
+			// player.play();
 		};
 		
 		if(webcamStream) rtcPeerConnection.addStream(webcamStream);
 		
-		
 		// Data channel configuration
-		if(!logInAsAdmin) rtcPeerConnection.dataChannel = createDataChannel("testChannel", rtcPeerConnection, dataObject);
+		if(!logInAsAdmin) rtcPeerConnection.dataChannel = createDataChannel("dataChannel", rtcPeerConnection, dataObject);
 		
 		/*
 		*	2. Send offer to signalling server if client
@@ -255,7 +258,7 @@ WebRTC_Channel = {};
 		
 		rtcPeerConnection.sendMessage = function(message) {
 			if(typeof rtcPeerConnection.dataChannel !== 'undefined') {
-				if(rtcPeerConnection.dataChannel.readyState == "closed") rtcPeerConnection.dataChannel = createDataChannel("testChannel", rtcPeerConnection, dataObject);
+				if(rtcPeerConnection.dataChannel.readyState == "closed") rtcPeerConnection.dataChannel = createDataChannel("dataChannel", rtcPeerConnection, dataObject);
 				if(rtcPeerConnection.dataChannel.readyState == "open") {
 					console.log("Sending " + message.length + " characters of data over WebRTC.");
 					rtcPeerConnection.dataChannel.send(message);
@@ -284,5 +287,5 @@ WebRTC_Channel = {};
 	}
 	
 	
-}(WebRTC_Channel));	
+}(WebRTC_Channel, SessionControl));	
 	
