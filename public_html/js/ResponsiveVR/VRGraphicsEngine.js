@@ -47,7 +47,7 @@ VRGraphicsEngine = {};
 		local : false,
 		scale : { x : 0.09, y: 0.09, z : 0.09 },
 		rotation : { x : 0, y : -Math.PI , z : 0 },
-		position : { x : 0.5, y : -0.75, z : -0.5 },
+		position : { x : 0.5, y : -0.65, z : -0.5 },
 		model: null,
 		bones: [
 			{
@@ -101,7 +101,7 @@ VRGraphicsEngine = {};
 	avatars[1] = JSON.parse(JSON.stringify(avatars[0]));
 	avatars[1].local = true;
 	avatars[1].rotation = { x : 0, y : Math.PI / 2, z : 0 };
-	avatars[1].position = { x : 0, y : -0.75, z : 0 },
+	avatars[1].position = { x : 0, y : -0.65, z : 0.1 },
 	
 	webcam = {
 		markers : {
@@ -458,6 +458,7 @@ VRGraphicsEngine = {};
 			sceneModel.state.moveToAdminView = false;
 			cameraOffset.position.copy(avatars[0].model.position);
 			cameraOffset.position.setY(0);
+			cameraOffset.position.setX(avatars[0].model.position.x - 0.1);
 			var x = avatars[0].model.rotation.x;
 			var y = avatars[0].model.rotation.y;
 			var z = avatars[0].model.rotation.z;
