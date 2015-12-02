@@ -1,0 +1,4 @@
+- Display image next to content in content view
+- Test kinect
+- Fix kinect leg rotations
+
