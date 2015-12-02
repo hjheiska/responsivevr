@@ -123,6 +123,7 @@ VRGraphicsEngine = {};
 	MENU_SELECTION_DELAY = 1000;
 	MENU_ITEM_SCALE_CHANGE = 1.3;
 	HOME_PAGE_COLOR = 0xffffff;
+	defaultSphereTexture = THREE.ImageUtils.loadTexture('media/faded_horizon.png'),
 	
 	VRGraphicsEngine.createCanvas = function(element) {
 		
@@ -266,7 +267,7 @@ VRGraphicsEngine = {};
 		// Add background sphere
 		var geometry = new THREE.SphereGeometry( 9000, 64, 32 );
 		geometry.applyMatrix( new THREE.Matrix4().makeScale( -1, 1, 1 ) );	
-		var material = new THREE.MeshBasicMaterial( {color: HOME_PAGE_COLOR} );
+		var material = new THREE.MeshBasicMaterial( {map: defaultSphereTexture} );
 		backgroundSphere = new THREE.Mesh( geometry,  material );
 		backgroundSphere.name = "backgroundSphere";
 		backgroundSphere.rotation.set(0, -Math.PI / 2, 0, 'XYZ');
@@ -861,11 +862,11 @@ VRGraphicsEngine = {};
 				backgroundVideoSphereTexture = videoTexture;
 			}
 			else {
-				backgroundSphere.material = new THREE.MeshBasicMaterial( {color: HOME_PAGE_COLOR} );
+				backgroundSphere.material = new THREE.MeshBasicMaterial( {map: defaultSphereTexture} );
 			}
 		}
 		else { 
-			backgroundSphere.material = new THREE.MeshBasicMaterial( {color: HOME_PAGE_COLOR} );
+			backgroundSphere.material = new THREE.MeshBasicMaterial( {map: defaultSphereTexture} );
 		}
 		// TODO: Object background
 	}

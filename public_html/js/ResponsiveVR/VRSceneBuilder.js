@@ -237,7 +237,8 @@ VRSceneBuilder = {};
 		var isContentElement = (Object3D.vr.element.constructor == VRSceneModel.Content);
 		
 		var style = 
-			'background-color: black;' +
+			'background-color:rgba(100,100,100,0.80);' +
+			//'background-color: black;' +
 			'color: white;' +
 			'opacity: 0.8;' +  
 			'border-radius: 10px;' + 
