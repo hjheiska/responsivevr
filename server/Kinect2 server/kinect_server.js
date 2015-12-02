@@ -1,10 +1,10 @@
-﻿process.env.NODE_TLS_REJECT_UNAUTHORIZED= "0";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED= "0";
 var Kinect2 = require('kinect2');
 var kinect = new Kinect2();
 var bodyData = [];
 
 var WebSocket = require('ws');
-var ws = new WebSocket('wss://54.93.164.209:8080');
+var ws = new WebSocket('wss://54.93.164.209?kinect=true');
 var wsConnectionIsOpen = false;
 
 ws.on('open', function open() {

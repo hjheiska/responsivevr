@@ -42,7 +42,9 @@ VRGraphicsEngine = {};
 	rayOrigin = new THREE.Vector2(0, 0);
 	cameraPosition = new THREE.Vector3();
 		
-	avatar = {
+	avatars = [];	
+	avatars[0] = {
+		local : false,
 		scale : { x : 0.09, y: 0.09, z : 0.09 },
 		rotation : { x : 0, y : -Math.PI , z : 0 },
 		position : { x : 0.5, y : -0.75, z : -0.5 },
@@ -96,7 +98,10 @@ VRGraphicsEngine = {};
 			
 		]
 	}
-	
+	avatars[1] = JSON.parse(JSON.stringify(avatars[0]));
+	avatars[1].local = true;
+	avatars[1].rotation = { x : 0, y : Math.PI / 2, z : 0 };
+	avatars[1].position = { x : 0, y : -0.75, z : 0 },
 	
 	webcam = {
 		markers : {
@@ -209,19 +214,21 @@ VRGraphicsEngine = {};
 			{ color: 0xcccccc, transparent: true, 	depthTest: false } 
 		);
 		
-		avatar.model =  new THREE.Object3D();
-		avatar.model.scale.set(avatar.scale.x, avatar.scale.y, avatar.scale.z);
-		avatar.model.rotation.set(avatar.rotation.x, avatar.rotation.y, avatar.rotation.z, 'XYZ');
-		avatar.model.position.set(avatar.position.x, avatar.position.y, avatar.position.z);
-		VRSceneBuilder.loadAndAddObject("objmtl", "media/models/minecraft/minecraft2.obj|media/models/minecraft/minecraft2.mtl", avatar.model);
-		newScene.add(avatar.model);
+		for(i = 0; i < avatars.length; i++) {
+			avatars[i].model =  new THREE.Object3D();
+			avatars[i].model.scale.set(avatars[i].scale.x, avatars[i].scale.y, avatars[i].scale.z);
+			avatars[i].model.rotation.set(avatars[i].rotation.x, avatars[i].rotation.y, avatars[i].rotation.z, 'XYZ');
+			avatars[i].model.position.set(avatars[i].position.x, avatars[i].position.y, avatars[i].position.z);
+			VRSceneBuilder.loadAndAddObject("objmtl", "media/models/minecraft/minecraft2.obj|media/models/minecraft/minecraft2.mtl", avatars[i].model);
+			newScene.add(avatars[i].model);
+		}
 		
 		// avatar2 =  new THREE.Object3D();
 		// VRSceneBuilder.loadAndAddObject("json", "media/models/007/json/model2_json.json", avatar2);
 		// console.log(avatar2);
 		// newScene.add(avatar2);
-		// avatar2.rotation.set(avatar.rotation.x, avatar.rotation.y, avatar.rotation.z);
-		// avatar2.position.set(avatar.position.x, avatar.position.y, avatar.position.z);
+		// avatar2.rotation.set(avatars[i].rotation.x, avatars[i].rotation.y, avatars[i].rotation.z);
+		// avatar2.position.set(avatars[i].position.x, avatars[i].position.y, avatars[i].position.z);
 		// avatar2.scale.set(0.5, 0.5, 0.5);
 		
 		// Add cursor sphere object for menu selection
@@ -408,9 +415,9 @@ VRGraphicsEngine = {};
 		}
 	}
 	
-	var getJointRotation = function(jointA_index, jointB_index, skeleton_index) {
-		var positionA = getJointPositionVector(jointA_index, skeleton_index);
-		var positionB = getJointPositionVector(jointB_index, skeleton_index);
+	var getJointRotation = function(jointA_index, jointB_index, skeleton_index, localSkeleton) {
+		var positionA = getJointPositionVector(jointA_index, skeleton_index, localSkeleton);
+		var positionB = getJointPositionVector(jointB_index, skeleton_index, localSkeleton);
 		var directionVector = positionA.sub(positionB);
 		
 		var quaternion = new THREE.Quaternion();
@@ -418,16 +425,29 @@ VRGraphicsEngine = {};
 		return quaternion;
 	}
 	
-	var getJointPositionVector = function(joint_index, skeleton_index) {
+	var getJointPositionVector = function(joint_index, skeleton_index, localSkeleton) {
 		
 		var vector = new THREE.Vector3(0,0,1);
-		if(typeof sceneModel.state.inputDevices.local.skeletons[skeleton_index] != 'undefined') {
-			vector.set(
-				sceneModel.state.inputDevices.local.skeletons[skeleton_index][joint_index][0][0],
-				sceneModel.state.inputDevices.local.skeletons[skeleton_index][joint_index][0][1],
-				sceneModel.state.inputDevices.local.skeletons[skeleton_index][joint_index][0][2]
-			);
+	
+		if(localSkeleton) {
+			if(typeof sceneModel.state.inputDevices.remote.skeletons[skeleton_index] != 'undefined') {
+				vector.set(
+					sceneModel.state.inputDevices.local.skeletons[skeleton_index][joint_index][0][0],
+					sceneModel.state.inputDevices.local.skeletons[skeleton_index][joint_index][0][1],
+					sceneModel.state.inputDevices.local.skeletons[skeleton_index][joint_index][0][2]
+				);
+			}
 		}
+		else {
+			if(typeof sceneModel.state.inputDevices.remote.skeletons[skeleton_index] != 'undefined') {
+				vector.set(
+					sceneModel.state.inputDevices.remote.skeletons[skeleton_index][joint_index][0][0],
+					sceneModel.state.inputDevices.remote.skeletons[skeleton_index][joint_index][0][1],
+					sceneModel.state.inputDevices.remote.skeletons[skeleton_index][joint_index][0][2]
+				);
+			}
+		}
+		
 	
 		return vector;
 	}
@@ -436,52 +456,64 @@ VRGraphicsEngine = {};
 		
 		if(sceneModel.state.moveToAdminView) {
 			sceneModel.state.moveToAdminView = false;
-			cameraOffset.position.copy(avatar.model.position);
+			cameraOffset.position.copy(avatars[0].model.position);
 			cameraOffset.position.setY(0);
-			var x = avatar.model.rotation.x;
-			var y = avatar.model.rotation.y;
-			var z = avatar.model.rotation.z;
+			var x = avatars[0].model.rotation.x;
+			var y = avatars[0].model.rotation.y;
+			var z = avatars[0].model.rotation.z;
 			cameraOffset.rotation.set(x, y - (Math.PI / 2), z, 'XYZ');
-			avatar.model.position.set(0,avatar.model.position.y,0);
-			avatar.model.rotation.set(0,avatar.model.rotation.y - Math.PI / 2,0,'XYZ');
-		}
+			avatars[1].local = false;
+			avatars[0].local = true;
 		
+					
+					
+			// avatars[i].model.position.set(0,avatars[i].model.position.y,0);
+			// avatars[i].model.rotation.set(0,avatars[i].model.rotation.y - Math.PI / 2,0,'XYZ');
+		}
+					
 		// Check if avatar model has loaded
-		if(avatar.model.children.length > 0) {
-			
-			// Kinect data
-			if(sceneModel.state.inputDevices.local.skeletons.length > 0) { 
-			
-				for(var i = 0; i < avatar.bones.length; i++) {
+		for(var i = 0; i < avatars.length; i++) {
+			if(avatars[i].model.children.length > 0) {
+				
+				// Kinect data
+				if(
+					(typeof sceneModel.state.inputDevices.local.skeletons[i] != 'undefined' && avatars[i].local)
+					||
+					(typeof sceneModel.state.inputDevices.remote.skeletons[i] != 'undefined' && !avatars[i].local)
+					) { 
+				
 					
-					// Set bone if not set
-					if(avatar.bones[i].meshGroup == null) {
-						avatar.bones[i].meshGroup = avatar.model.getObjectByName(avatar.bones[i].meshName);
-						setBoneOffsets(avatar.bones[i]);
-					}
+						for(var j = 0; j < avatars[i].bones.length; j++) {
+							// Set bone if not set
+							if(avatars[i].bones[j].meshGroup == null) {
+								avatars[i].bones[j].meshGroup = avatars[i].model.getObjectByName(avatars[i].bones[j].meshName);
+								setBoneOffsets(avatars[i].bones[j]);
+							}
+							
+							// Set bone rotation
+							var rotation = {x :0, y:0, z:0, w:1 };
+							
+							switch(avatars[i].bones[j].name) {
+								case "head":rotation =  sceneModel.state.inputDevices.remote.HMDs[0];break;
+								case "leftArm":rotation = getJointRotation(10, 9, i, avatars[i].local);break;
+								case "rightArm":rotation = getJointRotation(5, 6, i, avatars[i].local);break;
+								case "leftLeg":rotation = getJointRotation(13, 12, i, avatars[i].local);break;
+								case "rightLeg":rotation = getJointRotation(17, 16, i, avatars[i].local);break;
+							}
+							
+							setJoinRotation(avatars[i].bones[j], rotation);
+						}
 					
-					// Set bone rotation
-					var rotation = {x :0, y:0, z:0, w:1 };
-					
-					switch(avatar.bones[i].name) {
-						case "head":rotation =  sceneModel.state.inputDevices.local.HMDs[0];break;
-						case "leftArm":rotation = getJointRotation(10, 9, 0);break;
-						case "rightArm":rotation = getJointRotation(5, 6, 0);break;
-						case "leftLeg":rotation = getJointRotation(13, 12, 0);break;
-						case "rightLeg":rotation = getJointRotation(17, 16, 0);break;
-					}
-					
-					setJoinRotation(avatar.bones[i], rotation);
 				}
-			}
-			else { // Just head rotation
-				avatar.bones[0].meshGroup = avatar.model.getObjectByName(avatar.bones[0].meshName);
-				setBoneOffsets(avatar.bones[0]);
-				setJoinRotation(avatar.bones[0],  sceneModel.state.inputDevices.local.HMDs[0]);
-			}
+				else { // Just head rotation
+					avatars[i].bones[0].meshGroup = avatars[i].model.getObjectByName(avatars[i].bones[0].meshName);
+					setBoneOffsets(avatars[i].bones[0]);
+					if(avatars[i].local ) setJoinRotation(avatars[i].bones[0],  sceneModel.state.inputDevices.local.HMDs[0]);
+					else  setJoinRotation(avatars[i].bones[0],  sceneModel.state.inputDevices.remote.HMDs[0]);
+				}
 			
+			}
 		}
-		
 		if(sceneModel.state.inputDevices.local.webCameraImage && !webcam.image.webcameraPlane.material.map) {
 		
 			webcam.image.webcamTexture = new THREE.Texture(sceneModel.state.inputDevices.local.webCameraImage);

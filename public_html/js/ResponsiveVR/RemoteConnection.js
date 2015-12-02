@@ -68,11 +68,20 @@ RemoteConnection = {};
 			}, 1000); 	
 		}
 		else {
-			if(state.newStateToSend && webRTCData.channel) {
-				state.newStateToSend = false;
-				var newState = JSON.stringify(state.navigation);
+			
+			if(webRTCData.channel) {
+				// Send scene state changes
+				if(state.newStateToSend) {
+					state.newStateToSend = false;
+					var newState = JSON.stringify(state.navigation);
+					webRTCData.channel.sendMessage(newState);	
+				}
+				// Send input device data
+				var newState = JSON.stringify(state.inputDevices.local.HMDs);
 				webRTCData.channel.sendMessage(newState);	
 			}
+				
+			// Receive data
 			if(webRTCData.newMessage) {
 				
 				var newData = JSON.parse(webRTCData.data);
@@ -82,9 +91,13 @@ RemoteConnection = {};
 					state.navigation = newData;
 					state.newStateReceived = true;
 				}
+				else if(typeof newData[0].x != 'undefined')  {
+					state.inputDevices.remote.HDMs = newData;
+				}
 				else {
 					// New skeleton data
-					state.inputDevices.local.skeletons = newData;
+					if(logInAsAdmin) state.inputDevices.local.skeletons = newData;
+					else state.inputDevices.remote.skeletons = newData;
 				}
 				webRTCData.newMessage = false;
 				

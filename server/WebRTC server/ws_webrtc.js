@@ -122,6 +122,7 @@ var wss = new WebSocketServer( {server: app, verifyClient: function(info) {
 			var newSession = {
 				clients : []
 			}
+			
 			newSession.clients.push(info.req.client);
 			sessions[queryData.sessionid]  = newSession;
 			info.req.client.sessionid = queryData.sessionid;
@@ -130,6 +131,9 @@ var wss = new WebSocketServer( {server: app, verifyClient: function(info) {
 			console.log("Client is trying to join a session.");
 			info.req.client.sessionid = queryData.sessionid;
 			sessions[queryData.sessionid].clients.push(info.req.client);	
+		}
+		else if(queryData.kinect) {
+			console.log("Kinect client detected.");
 		}
 		else {
 			console.log("No session with provided id. Blocking connection.");
