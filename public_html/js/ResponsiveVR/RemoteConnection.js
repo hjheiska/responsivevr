@@ -117,7 +117,7 @@ WebRTC_Channel = {};
 				webcamStream = stream;
 				rtcChannel = getRtcChannel(logInAsAdmin, signalingChannel, dataObject);
 				dataObject.channel = rtcChannel;
-				dataObject.stream = webcamSteam;
+				dataObject.stream = webcamStream;
 			},  
 			function(err) {
 				console.log("Could not get access to web camera");

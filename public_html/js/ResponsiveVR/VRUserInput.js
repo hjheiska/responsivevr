@@ -123,8 +123,11 @@ VRUserInput = {};
 	}
 	
 	var checkVRSupport = function(onSuccess) {
-		if ( navigator.getVRDevices !== undefined ) {
+		if (navigator.getVRDevices) {
 			navigator.getVRDevices().then( onSuccess );
+		}
+		else if(navigator.mozGetVRDevices) {
+			navigator.mozGetVRDevices(onSuccess);
 		} else {
 			console.log( 'Your browser is not VR Ready');
 		}

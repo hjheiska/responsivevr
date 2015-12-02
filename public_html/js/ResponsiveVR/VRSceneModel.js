@@ -145,10 +145,11 @@ function VRSceneModel() {
 				sceneChangeSent = true;
 			}
 			
-			if(!state.newStateToSend && !changingScene) {
-				console.log(changingScene, RemoteConnection.connectionIsOpen(), state.newStateToSend , "here");
-				getNewModel(href);
+			if((!state.newStateToSend || !RemoteConnection.connectionIsOpen()) && !changingScene) {
 				changingScene = true;
+				//console.log(changingScene, RemoteConnection.connectionIsOpen(), state.newStateToSend , "here");
+				getNewModel(href);
+				
 			}
 			
 		}

@@ -437,11 +437,12 @@ VRGraphicsEngine = {};
 			sceneModel.state.moveToAdminView = false;
 			cameraOffset.position.copy(avatar.model.position);
 			cameraOffset.position.setY(0);
-			cameraOffset.rotation.copy(avatar.model.rotation);
-			
+			var x = avatar.model.rotation.x;
+			var y = avatar.model.rotation.y;
+			var z = avatar.model.rotation.z;
+			cameraOffset.rotation.set(x, y - (Math.PI / 2), z, 'XYZ');
 			avatar.model.position.set(0,avatar.model.position.y,0);
 			avatar.model.rotation.set(0,avatar.model.rotation.y - Math.PI / 2,0,'XYZ');
-			
 		}
 		
 		// Check if avatar model has loaded
@@ -524,9 +525,11 @@ VRGraphicsEngine = {};
 		var d = new Date();
 		var n = d.getTime(); 
 		articles.position.setY(Math.sin(n / 500) / 100);
-		contentPlaneHolder.position.setY(Math.sin(n / 500) / 100);
-		
 		articles.rotation.set(0, Math.sin((n - 500) / 500) / 150, 0, 'XYZ');
+		
+		contentPlaneHolder.position.setY(Math.sin(n / 500) / 100);
+		contentPlaneHolder.rotation.set(0, Math.sin((n - 500) / 500) / 150, 0, 'XYZ');
+		
 	
 		if(sceneModel.state.logicUpdate || sceneModel.state.newStateReceived) {
 			checkVisibility();
