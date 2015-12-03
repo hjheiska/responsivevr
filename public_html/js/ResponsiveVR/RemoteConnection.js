@@ -77,7 +77,7 @@ RemoteConnection = {};
 					webRTCData.channel.sendMessage(newState);	
 				}
 				// Send input device data
-				var newState = JSON.stringify(state.inputDevices.local.HMDs);
+				var newState = JSON.stringify(state.inputDevices.local.cameraRotation);
 				webRTCData.channel.sendMessage(newState);	
 			}
 				
@@ -91,8 +91,8 @@ RemoteConnection = {};
 					state.navigation = newData;
 					state.newStateReceived = true;
 				}
-				else if(typeof newData[0].x != 'undefined')  {
-					state.inputDevices.remote.HDMs = newData;
+				else if(typeof newData._x != 'undefined')  {
+					state.inputDevices.remote.cameraRotation = newData;
 				}
 				else {
 					// New skeleton data
@@ -273,7 +273,7 @@ WebRTC_Channel = {};
 			if(typeof rtcPeerConnection.dataChannel !== 'undefined') {
 				if(rtcPeerConnection.dataChannel.readyState == "closed") rtcPeerConnection.dataChannel = createDataChannel("dataChannel", rtcPeerConnection, dataObject);
 				if(rtcPeerConnection.dataChannel.readyState == "open") {
-					console.log("Sending " + message.length + " characters of data over WebRTC.");
+					//console.log("Sending " + message.length + " characters of data over WebRTC.");
 					rtcPeerConnection.dataChannel.send(message);
 				}
 			}
@@ -293,7 +293,10 @@ WebRTC_Channel = {};
 	var createDataChannel = function(dataChannelName, rtcPeerConnection, dataObject) {
 		var dataChannel = rtcPeerConnection.createDataChannel(dataChannelName);
 		dataChannel.onerror = function (error) { console.log("Data Channel Error:", error);};
-		dataChannel.onmessage = function (event) { dataObject.data = event.data; dataObject.newMessage = true; console.log("Receiving " + event.data.length + " characters of data over WebRTC"); };
+		dataChannel.onmessage = function (event) { 
+			dataObject.data = event.data; dataObject.newMessage = true; 
+			//console.log("Receiving " + event.data.length + " characters of data over WebRTC"); 
+		};
 		dataChannel.onopen = function () {  console.log("Channel open"); };
 		dataChannel.onclose = function () { console.log("The Data Channel is Closed");	};
 		return dataChannel;

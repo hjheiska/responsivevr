@@ -454,6 +454,8 @@ VRGraphicsEngine = {};
 	
 	var animate = function() {
 		
+		sceneModel.state.inputDevices.local.cameraRotation = camera.rotation;
+		
 		if(sceneModel.state.moveToAdminView) {
 			sceneModel.state.moveToAdminView = false;
 			cameraOffset.position.copy(avatars[0].model.position);
@@ -509,10 +511,25 @@ VRGraphicsEngine = {};
 				else { // Just head rotation
 					avatars[i].bones[0].meshGroup = avatars[i].model.getObjectByName(avatars[i].bones[0].meshName);
 					setBoneOffsets(avatars[i].bones[0]);
-					if(avatars[i].local ) setJoinRotation(avatars[i].bones[0],  sceneModel.state.inputDevices.local.HMDs[0]);
-					else  setJoinRotation(avatars[i].bones[0],  sceneModel.state.inputDevices.remote.HMDs[0]);
-				}
 			
+					if(avatars[i].local) {
+						var rotation = new THREE.Quaternion();
+						var x = sceneModel.state.inputDevices.local.cameraRotation._x;
+						var y = sceneModel.state.inputDevices.local.cameraRotation._y;
+						var z = sceneModel.state.inputDevices.local.cameraRotation._z;
+						rotation.setFromEuler(new THREE.Euler(x, y, z));
+						setJoinRotation(avatars[i].bones[0], rotation);
+					}
+					else  {
+						var rotation = new THREE.Quaternion();
+						var x = sceneModel.state.inputDevices.remote.cameraRotation._x;
+						var y = sceneModel.state.inputDevices.remote.cameraRotation._y;
+						var z = sceneModel.state.inputDevices.remote.cameraRotation._z;
+						rotation.setFromEuler(new THREE.Euler(x, y, z));
+						setJoinRotation(avatars[i].bones[0],  rotation);
+					}
+					
+				}
 			}
 		}
 		if(sceneModel.state.inputDevices.local.webCameraImage && !webcam.image.webcameraPlane.material.map) {

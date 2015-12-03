@@ -58,6 +58,7 @@ function VRSceneModel() {
 		inputDevices : 
 		{
 			local : {
+				cameraRotation:  {	_x : 0, _y : 0, _z : 0 },
 				HMDs: [ {	x : 0, y : 0, z : 0, w : 1 } ],
 				skeletons: [],
 				keyboard : 
@@ -73,6 +74,7 @@ function VRSceneModel() {
 				webCameraImage: null
 			},
 			remote : {
+				cameraRotation:  {	_x : 0, _y : 0, _z : 0  },
 				HMDs: [ {	x : 0, y : 0, z : 0, w : 1 } ],
 				skeletons: [],
 				keyboard : 
