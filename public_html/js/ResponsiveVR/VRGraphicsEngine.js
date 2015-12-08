@@ -55,7 +55,7 @@ VRGraphicsEngine = {};
 				meshName: "Head_Cube.001",
 				meshGroup: null,
 				pivotPositionOffset : { x : 0, y : 0, z : 0 },
-				groupPositionOffset : { x : 0, y : 7, z : 0 },
+				groupPositionOffset : { x : 0, y : 6.75, z : 0 },
 				pivotRotationOffset : { x : 0, y : -Math.PI / 2, z : 0 },
 				groupRotationOffset : { x : 0, y :  Math.PI / 2, z : 0 }
 			},
@@ -64,7 +64,7 @@ VRGraphicsEngine = {};
 				meshName: "Right_Arm_Cube.013",
 				meshGroup: null,
 				pivotPositionOffset : { x : 0, y : 0, z : -1 },
-				groupPositionOffset : { x : 0, y : 5.5, z : -1 },
+				groupPositionOffset : { x : 0, y : 5.3, z : -1 },
 				pivotRotationOffset : { x : 0, y : -Math.PI / 2, z : 0 },
 				groupRotationOffset : { x : 0, y : 0, z : 0 }
 			},
@@ -73,7 +73,7 @@ VRGraphicsEngine = {};
 				meshName: "Left_Arm_Cube.012",
 				meshGroup: null,
 				pivotPositionOffset : { x : 0, y : 0, z : 1 },
-				groupPositionOffset : { x : 0, y : 5.5, z : 1 },
+				groupPositionOffset : { x : 0, y : 5.3, z : 1 },
 				pivotRotationOffset : { x : 0, y : -Math.PI / 2, z : 0 },
 				groupRotationOffset : { x : 0, y : 0, z : 0 }
 			},
@@ -156,7 +156,7 @@ VRGraphicsEngine = {};
 		
 		// Camera
 		camera = new THREE.PerspectiveCamera(90, screen.width / screen.height, 0.1, 10000);
-		camera.position.set(0,0,0.05);
+		camera.position.set(0,0,0.025);
 		
 		// Camera for the QRMarkers (Require their own projection matrix)
 		webcam.image.webcamCamera =  new THREE.Camera();
@@ -219,7 +219,7 @@ VRGraphicsEngine = {};
 			avatars[i].model.scale.set(avatars[i].scale.x, avatars[i].scale.y, avatars[i].scale.z);
 			avatars[i].model.rotation.set(avatars[i].rotation.x, avatars[i].rotation.y, avatars[i].rotation.z, 'XYZ');
 			avatars[i].model.position.set(avatars[i].position.x, avatars[i].position.y, avatars[i].position.z);
-			VRSceneBuilder.loadAndAddObject("objmtl", "media/models/minecraft/minecraft2.obj|media/models/minecraft/minecraft2.mtl", avatars[i].model);
+			VRSceneBuilder.loadAndAddObject("objmtl", "media/models/minecraft/minecraft3.obj|media/models/minecraft/minecraft3.mtl", avatars[i].model);
 			newScene.add(avatars[i].model);
 		}
 		
@@ -301,7 +301,7 @@ VRGraphicsEngine = {};
 		webcam.image.webcameraPlane.material.depthWrite = false;
 		webcamScene.add(webcam.image.webcameraPlane);
 		
-		var webcameraDistance = 0.75;
+		var webcameraDistance = 0.55;
 		if(webcam.image.webcameraImagePlane) camera.remove(webcam.image.webcameraImagePlane);
 		webcam.image.webcameraImagePlane = new THREE.Mesh(
 			new THREE.PlaneGeometry(0.8654 * webcameraDistance, 1.1547 * webcameraDistance, 1),
@@ -316,6 +316,10 @@ VRGraphicsEngine = {};
 		webcamScene.add(webcam.image.webcamCamera);
 		newScene.add( new THREE.AmbientLight( 0xffffff ) );
 		cameraOffset.add(camera);
+		cameraOffset.position.copy(avatars[1].model.position);
+		cameraOffset.position.setY(0);
+		cameraOffset.position.setZ(avatars[1].model.position.x + 0.05);
+			
 		newScene.add(cameraOffset);
 		
 		if(threeJsScene == null) {
@@ -511,6 +515,21 @@ VRGraphicsEngine = {};
 				else { // Just head rotation
 					avatars[i].bones[0].meshGroup = avatars[i].model.getObjectByName(avatars[i].bones[0].meshName);
 					setBoneOffsets(avatars[i].bones[0]);
+			
+					eulerRotation1 = new THREE.Euler(-Math.PI / 2,0,0, 'XYZ');
+					quaternionRotation1 = new THREE.Quaternion();
+					quaternionRotation1.setFromEuler( eulerRotation1 );
+					eulerRotation2 = new THREE.Euler(Math.PI / 2,0,0, 'XYZ');
+					quaternionRotation2 = new THREE.Quaternion();
+					quaternionRotation2.setFromEuler( eulerRotation2 );
+					
+					avatars[i].bones[1].meshGroup = avatars[i].model.getObjectByName(avatars[i].bones[1].meshName);
+					setBoneOffsets(avatars[i].bones[1]);
+					avatars[i].bones[2].meshGroup = avatars[i].model.getObjectByName(avatars[i].bones[2].meshName);
+					setBoneOffsets(avatars[i].bones[2]);
+					setJoinRotation(avatars[i].bones[1], quaternionRotation1); // Right arm
+					setJoinRotation(avatars[i].bones[2], quaternionRotation2); // Left arm
+					
 			
 					if(avatars[i].local) {
 						var rotation = new THREE.Quaternion();

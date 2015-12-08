@@ -240,7 +240,7 @@ VRSceneBuilder = {};
 			'background-color:rgba(100,100,100,0.80);' +
 			//'background-color: black;' +
 			'color: white;' +
-			'opacity: 0.8;' +  
+			'opacity: 0.85;' +  
 			'border-radius: 10px;' + 
 			'margin: 0;' +
 			'padding: 0;' +

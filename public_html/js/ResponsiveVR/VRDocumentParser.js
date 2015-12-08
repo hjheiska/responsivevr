@@ -100,7 +100,9 @@ VRDocumentParser = {};
 	}
 	
 	var getText = function(element) {
-		return element.innerText || element.textContent;
+		var content = element.innerHTML;
+		content = content.replace(/<img[^>]*>/g,"");
+		return content; // element.innerText || element.textContent;
 	}
 	
 }(VRDocumentParser));
