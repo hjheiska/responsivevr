@@ -76,9 +76,11 @@ RemoteConnection = {};
 					var newState = JSON.stringify(state.navigation);
 					webRTCData.channel.sendMessage(newState);	
 				}
-				// Send input device data
-				var newState = JSON.stringify(state.inputDevices.local.cameraRotation);
-				webRTCData.channel.sendMessage(newState);	
+				else {
+					// Send input device data
+					var newState = JSON.stringify(state.inputDevices.local.cameraRotation);
+					webRTCData.channel.sendMessage(newState);	
+				}
 			}
 				
 			// Receive data
