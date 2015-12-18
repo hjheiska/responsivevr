@@ -36,6 +36,7 @@ VRUserInput = {};
 			);
 		}
 
+		/*
 		if(ARParams == null) {
 			getQRTracking(
 				function(success) {
@@ -47,7 +48,7 @@ VRUserInput = {};
 			state.inputDevices.local.webcamCameraParams = ARParams;
 			state.inputDevices.local.webCameraImage = ARCanvas;
 		}
-		
+		*/
 		
 		// Keyboard events
 		domElement.onkeypress = function(e) {
@@ -97,14 +98,15 @@ VRUserInput = {};
 	var positionSensorLoop = function() {
 		var hmdState = PositionSensor.getState();
 		
-		state.inputDevices.local.HMDs[0] = 
-			{ 
-				x : hmdState.orientation.x,
-				y : hmdState.orientation.y,
-				z : hmdState.orientation.z,
-				w : hmdState.orientation.w
-			};
-		
+		if(hmdState.orientation) {
+			state.inputDevices.local.HMDs[0] = 
+				{ 
+					x : hmdState.orientation.x,
+					y : hmdState.orientation.y,
+					z : hmdState.orientation.z,
+					w : hmdState.orientation.w
+				};
+		}
 		requestAnimationFrame(positionSensorLoop);
 	}
 	

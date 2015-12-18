@@ -190,9 +190,12 @@ VRGraphicsEngine = {};
 		newModel = model;
 		
 		var header = new THREE.Object3D(); header.name = "header";
+		header.visible = false;
 		var links =  new THREE.Object3D(); links.name = "links";
+		links.visible = false;
 		articles =  new THREE.Object3D(); articles.name = "articles";
 		var footer =  new THREE.Object3D(); footer.name = "footer";
+		footer.visible = false;
 		newScene.add(header, links, articles, footer);
 		newScene.links = [];
 		
@@ -243,7 +246,7 @@ VRGraphicsEngine = {};
 		backSphereMesh = new THREE.Mesh( navSphereGeom, greyMaterial );
 		backSphereMesh.name="mesh";
 		backSphere.add(backSphereMesh);
-		backSphere.position.set(-0.25,-1,-1);
+		backSphere.position.set(-0.20,-1,-1);
 		backSphere.name="backSphere";
 		backSphereMesh.vr = {};
 		backSphereMesh.vr.type = "back";
@@ -252,7 +255,7 @@ VRGraphicsEngine = {};
 		toggleHudSphereMesh = new THREE.Mesh( navSphereGeom, greyMaterial );
 		toggleHudSphereMesh.name="mesh";
 		toggleHudSphere.add(toggleHudSphereMesh);
-		toggleHudSphere.position.set(0,-1,-1);
+		toggleHudSphere.position.set(0.20,-1,-1);
 		toggleHudSphere.name = "toggleHudSphere";
 		toggleHudSphereMesh.vr = {};
 		toggleHudSphereMesh.vr.type = "toggleHud";
@@ -265,7 +268,9 @@ VRGraphicsEngine = {};
 		toggleWebcamSphere.name = "toggleWebcamSphere";
 		toggleWebcamSphereMesh.vr = {};
 		toggleWebcamSphereMesh.vr.type = "toggleWebcam";
+		toggleWebcamSphere.visible = false;
 		
+		//newScene.add(backSphere, toggleHudSphere, toggleWebcamSphere);
 		newScene.add(backSphere, toggleHudSphere, toggleWebcamSphere);
 		VRGraphicsEngine.makeObjectALink(backSphereMesh);
 		VRGraphicsEngine.makeObjectALink(toggleHudSphereMesh);
@@ -807,8 +812,8 @@ VRGraphicsEngine = {};
 				for(var i = 0; i < links.length; i++) {
 					hideShowObjectAndContents(links[i], true, true, -1, -1);	
 				}
-				footer.visible = true;
-				header.visible = true;
+				//footer.visible = true;
+				//header.visible = true;
 			}
 			
 			backSphere.visible = true;
@@ -889,6 +894,7 @@ VRGraphicsEngine = {};
 		var element = article.vr.element;
 		handleBackgroundForeground(element);
 	}
+	
 	var activateContent = function(content) {
 		var element = content.vr.element;
 		VRSceneBuilder.handleContentPlane(element, contentPlane);
